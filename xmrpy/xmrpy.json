@@ -1,0 +1,10 @@
+{
+    "auth": {
+        "digest_user_name": "ralston",
+        "digest_user_passwd": "password"
+    },
+    "rpc": {
+        "daemon_rpc_addr": "127.0.0.1:18081",
+        "wallet_rpc_addr": "127.0.0.1:18083"
+    }
+}

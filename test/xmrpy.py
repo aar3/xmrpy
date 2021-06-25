@@ -1,10 +1,10 @@
 import pytest
 from xmrpy import WalletClient
-from xmrpy.config import Config
+from xmrpy.config import Config, config
 from xmrpy.utils import is_simple_type
 
 
-config = Config(
+test_config = Config(
     DIGEST_USER_NAME="ralston",
     DIGEST_USER_PASSWD="password",
     DAEMON_RPC_ADDR="127.0.0.1:18081",
@@ -20,6 +20,7 @@ class TestUtils:
 class TestWalletClient:
     def setup(self):
         headers = {"Content-Type": "application/json"}
+        # pylint: disable=attribute-defined-outside-init
         self.client = WalletClient(config, headers=headers).auth()
 
     @pytest.mark.asyncio

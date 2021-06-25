@@ -1,7 +1,6 @@
 import json
 import httpx
 from xmrpy.t import Optional, Dict, Any
-from xmrpy._core import RpcError
 
 
 class Headers(Dict[str, str]):
@@ -9,7 +8,7 @@ class Headers(Dict[str, str]):
 
 
 class HttpClient:
-    def __init__(self, headers: Dict[str, str]):
+    def __init__(self, headers: Optional[Dict[str, str]] = None):
         self._headers = headers
         self._httpx = httpx.AsyncClient()
         self._auth: httpx.DigestAuth

@@ -1,5 +1,5 @@
 import json
-from xmrpy.t import Dict, Prim, Any, Optional, Union
+from xmrpy.t import Dict, Prim, Any, Optional, Union, Mapping
 from xmrpy.utils import is_simple_type
 
 
@@ -8,7 +8,7 @@ class Error(Exception):
 
 
 class DTO:
-    def __init__(self, data: Union[str, Dict[str, Prim]], **kwargs: Dict[str, Prim]):
+    def __init__(self, data: Union[str, Mapping[str, Prim]], **kwargs: Dict[str, Prim]):
         if data:
             if isinstance(data, str):
                 as_dict: Dict[str, Prim] = json.loads(data)
