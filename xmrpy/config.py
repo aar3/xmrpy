@@ -1,6 +1,6 @@
 import os
-from xmrpy.t import Mapping, Dict
-from xmrpy.utils import conf_to_config
+from xmrpy.t import Dict
+from xmrpy.utils import config_file_to_config
 
 
 class Config:
@@ -16,5 +16,4 @@ class Config:
 
 
 p = os.path.join(os.path.dirname(os.path.relpath(__file__)), "xmrpy.json")
-config = conf_to_config(p)
-# config = Config()
+config = config_file_to_config(p)

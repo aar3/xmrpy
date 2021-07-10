@@ -17,7 +17,10 @@ class HttpClient:
         if response.status_code != 200:
             return {
                 "result": None,
-                "error": {"code": response.status_code, "message": response.text},
+                "error": {
+                    "code": response.status_code,
+                    "message": response.text,
+                },
                 "id": "0",
                 "jsonrpc": "2.0",
             }

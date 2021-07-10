@@ -1,13 +1,9 @@
 import json
-from xmrpy.t import Dict, Prim, Any, Optional, Union, Mapping
-from xmrpy.utils import is_simple_type
+from xmrpy.t import Dict, Prim, Any, Union, Mapping
+from xmrpy.utils import dump_dict
 
 
-class Error(Exception):
-    pass
-
-
-class DTO:
+class DataClass:
     def __init__(self, data: Union[str, Mapping[str, Prim]], **kwargs: Dict[str, Prim]):
         if data:
             if isinstance(data, str):
@@ -16,7 +12,8 @@ class DTO:
             elif isinstance(data, dict):
                 self._inject_props(data)
             else:
-                raise TypeError("Illegal DTO value '{}'".format(type(data)))
+                raise TypeError("Illegal DataClass value '{}'".format(type(data)))
+
         elif kwargs:
             self._inject_props(kwargs)
 
@@ -24,12 +21,7 @@ class DTO:
         return json.dumps(self.as_dict()).encode()
 
     def as_dict(self) -> Dict[str, Prim]:
-        inner = {}
-        for key, value in self.__dict__.items():
-            if not is_simple_type(value):
-                value = value.as_dict()
-            inner[key] = value
-        return inner
+        return dump_dict(self.__dict__)
 
     def _inject_props(self, data: Dict[str, Any]):
         self.__dict__.update(data)
@@ -38,20 +30,6 @@ class DTO:
         return key in self.__dict__
 
 
-class RpcError(DTO):
+class RpcError(DataClass):
     code: int
     message: str
-
-
-class BaseResponse(DTO):
-    id: str
-    jsonrpc: str
-    error: Optional[RpcError]
-
-    def is_err(self) -> bool:
-        return "error" in self
-
-    def err_details(self) -> Optional[str]:
-        if self.error:
-            return self.error.message
-        return None

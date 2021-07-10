@@ -45,3 +45,6 @@ typing:
 
 test:
 	$(CMD_PYTEST)
+
+lint:
+	$(CMD_PYLINT)
