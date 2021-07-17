@@ -46,12 +46,12 @@ def config_file_to_config(p: str):
     with open(p, "r") as file:
         data = json.load(file)
 
-    for _, item in data.items():
+    for optname, item in data.items():
         if isinstance(item, dict):
             for key, value in item.items():
                 options[key.upper()] = value
-        elif isinstance(item, int):
-            options[key.upper()] = value
+        else:
+            options[optname.upper()] = item
 
     return Config(**options)
 

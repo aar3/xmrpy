@@ -21,17 +21,27 @@ from xmrpy.t import List, Dict, Any
 __all__ = [
     "CreateAccountResult",
     "CreateAddressResult",
+    "MakeIntegratedAddressResult",
     "CreateAddressResult",
+    "StopWalletResult",
+    "GetAttributeResult",
+    "SetTxNotesResult",
+    "CheckTxKeyResult",
     "GetAccountsResult",
+    "RescanBlockchainResult",
+    "SplitIntegratedAddressResult",
+    "GetTxNotesResult",
     "GetAccountTagsResult",
     "GetBulkPaymentsResult",
     "GetAddressIndexResult",
+    "GetTxKeyResult",
     "GetBalanceResult",
     "GetHeightResult",
     "GetPaymentsResult",
     "GetLanguagesResult",
     "LabelAccountResult",
     "IncomingTransfersResult",
+    "SetAttributeResult",
     "LabelAddressResult",
     "SetAccountTagDescriptionResult",
     "TagAccountsResult",
@@ -45,6 +55,7 @@ __all__ = [
     "RelayTxResult",
     "SweepDustResult",
     "StoreResult",
+    "QueryKeyResult",
     "ValidateAddressResult",
     "GetVersionResult",
 ]
@@ -241,6 +252,55 @@ class _Transfer(DataClass):
 
 class IncomingTransfersResult(DataClass):
     transfers: List[_Transfer]
+
+
+class QueryKeyResult(DataClass):
+    key: str
+
+
+class MakeIntegratedAddressResult(DataClass):
+    integrated_address: str
+    payment_id: str
+
+
+class SplitIntegratedAddressResult(DataClass):
+    is_subaddress: bool
+    payment_id: str
+    standard_address: str
+
+
+class StopWalletResult(DataClass):
+    pass
+
+
+class RescanBlockchainResult(DataClass):
+    pass
+
+
+class SetTxNotesResult(DataClass):
+    pass
+
+
+class GetTxNotesResult(DataClass):
+    notes: List[str]
+
+
+class SetAttributeResult(DataClass):
+    pass
+
+
+class GetAttributeResult(DataClass):
+    value: str
+
+
+class GetTxKeyResult(DataClass):
+    tx_key: str
+
+
+class CheckTxKeyResult(DataClass):
+    confirmations: int
+    in_pool: bool
+    recevied: bool
 
 
 # ---------

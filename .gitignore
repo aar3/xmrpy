@@ -3,4 +3,5 @@ __pycache__/
 venv/
 .DS_Store
 .envrc
-*.log
+*.log*
+docs/NOTES.md

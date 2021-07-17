@@ -28,7 +28,7 @@ class Config:
     DIGEST_USER_NAME: str
     DIGEST_USER_PASSWD: str
 
-    HTTP_READ_TIMEOUT: int = 3
+    HTTP_READ_TIMEOUT: int = 10
 
     def __init__(self, **kwargs: Dict[str, str]):
         self.__dict__.update(kwargs)

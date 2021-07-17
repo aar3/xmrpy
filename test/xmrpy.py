@@ -233,6 +233,87 @@ class TestWalletClient:
         # FIXME: This is probably blocked by needed existing transfers
         # assert isinstance(response.result.transfers, list)
 
+    @pytest.mark.asyncio
+    async def test_rpcmethod_query_key(self):
+        response = await self.client.query_key("view_key")
+        print(response.as_dict())
+
+        assert not response.is_err()
+        assert isinstance(response.result.key, str)
+
+    @pytest.mark.asyncio
+    async def test_rpcmethod_make_integrated_address(self):
+        response = await self.client.make_integrated_address()
+        print(response.as_dict())
+
+        assert not response.is_err()
+
+        assert isinstance(response.result.payment_id, str)
+        assert isinstance(response.result.integrated_address, str)
+
+    @pytest.mark.asyncio
+    async def test_rpcmethod_split_integrated_address(self):
+        r = await self.client.make_integrated_address()
+        response = await self.client.split_integrated_address(r.result.integrated_address)
+        print(response.as_dict())
+
+        assert not response.is_err()
+
+        assert isinstance(response.result.payment_id, str)
+        assert isinstance(response.result.standard_address, str)
+        assert not response.result.is_subaddress
+
+    @pytest.mark.skip(reason="Works, but will stop the wallet")
+    @pytest.mark.asyncio
+    async def test_rpcmethod_stop_wallet(self):
+        response = await self.client.stop_wallet()
+        print(response.as_dict())
+
+        assert not response.is_err()
+
+    @pytest.mark.skip(reason="Rescan takes too long for test suite, but works.")
+    @pytest.mark.asyncio
+    async def test_rpcmethod_rescan_blockchain(self):
+        response = await self.client.rescan_blockchain()
+        print(response.as_dict())
+
+        assert not response.is_err()
+
+    @pytest.mark.skip(reason="Blocked by .transfer()")
+    @pytest.mark.asyncio
+    async def test_rpcmethod_set_tx_notes(self):
+        pass
+
+    @pytest.mark.skip(reason="Blocked by .transfer()")
+    @pytest.mark.asyncio
+    async def test_rpcmethod_get_tx_notes(self):
+        pass
+
+    @pytest.mark.asyncio
+    async def test_rpcmethod_set_attribute(self):
+        response = await self.client.set_attribute("foo", "bar")
+        print(response.as_dict())
+
+        assert not response.is_err()
+
+    @pytest.mark.asyncio
+    async def test_rpcmethod_get_attribute(self):
+        response = await self.client.get_attribute("foo")
+
+        assert not response.is_err()
+
+        assert response.result.value == "bar"
+
+    @pytest.mark.skip(reason="Blocked by .transfer()")
+    @pytest.mark.asyncio
+    async def test_rpcmethod_get_tx_key(self):
+        pass
+
+    @pytest.mark.skip(reason="Blocked by .transfer()")
+    @pytest.mark.asyncio
+    async def test_rpcmethod_check_tx_key(self):
+        pass
+
     # ---------
 
     @pytest.mark.asyncio

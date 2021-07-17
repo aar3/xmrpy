@@ -25,9 +25,9 @@ class Headers(Dict[str, str]):
 
 
 class HttpClient:
-    def __init__(self, headers: Optional[Dict[str, str]] = None):
+    def __init__(self, headers: Optional[Dict[str, str]], timeout: int = 3):
         self._headers = headers
-        self._httpx = httpx.AsyncClient()
+        self._httpx = httpx.AsyncClient(timeout=timeout)
         self._auth: httpx.DigestAuth
 
     def _handle_response(self, response: httpx.Response):
