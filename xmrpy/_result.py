@@ -1,26 +1,52 @@
+# Copyright 2021 Rashad Alston
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+# and associated documentation files (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all copies or substantial
+# portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+# LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
+# EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+# USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 from xmrpy._core import DataClass
 from xmrpy.t import List, Dict, Any
 
-# NOTE: Keep these in sorted order
 __all__ = [
     "CreateAccountResult",
     "CreateAddressResult",
     "CreateAddressResult",
     "GetAccountsResult",
     "GetAccountTagsResult",
+    "GetBulkPaymentsResult",
     "GetAddressIndexResult",
     "GetBalanceResult",
     "GetHeightResult",
+    "GetPaymentsResult",
     "GetLanguagesResult",
     "LabelAccountResult",
+    "IncomingTransfersResult",
     "LabelAddressResult",
     "SetAccountTagDescriptionResult",
     "TagAccountsResult",
+    "SweepAllResult",
     "TransferResult",
     "TransferSplitResult",
     "UntagAccountsResult",
     "SignTransferResult",
+    "SubmitTransferResult",
+    "SweepSingleResult",
+    "RelayTxResult",
+    "SweepDustResult",
+    "StoreResult",
     "ValidateAddressResult",
+    "GetVersionResult",
 ]
 
 
@@ -139,3 +165,86 @@ class SignTransferResult(DataClass):
     signed_txset: str
     tx_hash_list: List[str]
     tx_raw_list: List[str]
+
+
+class SubmitTransferResult(DataClass):
+    tx_hash_list: List[str]
+
+
+class SweepDustResult(DataClass):
+    tx_hash_list: List[str]
+    tx_key_list: List[str]
+    amount_list: List[int]
+    fee_list: List[int]
+    tx_blob_list: List[str]
+    tx_metadata_list: List[str]
+    multisig_txset: str
+    unsigned_txset: str
+
+
+class SweepAllResult(DataClass):
+    tx_hash_list: List[str]
+    tx_key_list: List[str]
+    amount_list: List[int]
+    fee_list: List[int]
+    tx_blob_list: List[str]
+    tx_metadata_list: List[str]
+    unsigned_txset: str
+
+
+class SweepSingleResult(DataClass):
+    tx_hash_list: List[str]
+    tx_key_list: List[str]
+    amount_list: List[int]
+    fee_list: List[int]
+    tx_blob_list: List[str]
+    tx_metadata_list: List[str]
+    multisig_txset: str
+    unsigned_txset: str
+
+
+class RelayTxResult(DataClass):
+    tx_hash: str
+
+
+class StoreResult(DataClass):
+    pass
+
+
+class _Payment(DataClass):
+    payment_id: str
+    tx_hash: str
+    amount: int
+    block_height: int
+    unlock_time: int
+    subaddr_index: List[Dict[str, str]]
+    address: str
+
+
+class GetPaymentsResult(DataClass):
+    payments: List[_Payment]
+
+
+class GetBulkPaymentsResult(DataClass):
+    payments: List[_Payment]
+
+
+class _Transfer(DataClass):
+    amount: int
+    global_index: int
+    key_image: str
+    spent: bool
+    subaddr_index: int
+    tx_hash: str
+    tx_size: int
+
+
+class IncomingTransfersResult(DataClass):
+    transfers: List[_Transfer]
+
+
+# ---------
+
+
+class GetVersionResult(DataClass):
+    version: int

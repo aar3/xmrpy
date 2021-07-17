@@ -1,8 +1,26 @@
+# Copyright 2021 Rashad Alston
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+# and associated documentation files (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all copies or substantial
+# portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+# LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
+# EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+# USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 import string
 import random
 import pytest
 from xmrpy import WalletClient
 from xmrpy.config import Config, config
+from xmrpy.const import TransferType
 
 
 test_config = Config(
@@ -146,14 +164,81 @@ class TestWalletClient:
         assert not response.is_err()
         assert response.result.height > 0
 
-    @pytest.mark.skip(reason="FIXME: This is a live test and requires a multi test wallet setup")
+    @pytest.mark.skip(reason="Requires a mulit-wallet set up")
     async def test_rpcmethod_transfer(self):
         pass
 
-    @pytest.mark.skip(reason="FIXME: This is a live test and requires a multi test wallet setup")
+    @pytest.mark.skip(reason="Requires a mulit-wallet set up")
     async def test_rpcmethod_transfer_split(self):
         pass
 
-    @pytest.mark.skip(reason="FIXME: Requires a properly functioning .transfer_split() method")
+    @pytest.mark.skip(reason="Blocked by .transfer_split()")
     async def test_rpcmethod_sign_transfer(self):
         pass
+
+    @pytest.mark.skip(reason="Blocked .sign_transfer()")
+    async def test_rpcmethod_submit_transfer(self):
+        pass
+
+    @pytest.mark.asyncio
+    async def test_rpcmethod_sweep_dust(self):
+        response = await self.client.sweep_dust()
+        print(response.as_dict())
+
+        assert not response.is_err()
+
+    @pytest.mark.xfail(reason="RPC documentation response is -32600 error")
+    @pytest.mark.asyncio
+    async def test_rpcmethod_sweep_all(self):
+        response = await self.client.sweep_all(TEST_ADDR, account_index=0)
+        print(response.as_dict())
+
+        assert not response.is_err()
+
+    @pytest.mark.xfail(reason="RPC documentation response is -32600 error")
+    @pytest.mark.asyncio
+    async def test_rpcmethod_sweep_single(self):
+        response = await self.client.sweep_all(TEST_ADDR, account_index=0)
+        print(response.as_dict())
+
+        assert not response.is_err()
+
+    @pytest.mark.skip(reason="Blocked by .transfer()")
+    @pytest.mark.asyncio
+    async def test_rpcmethod_relay_tx(self):
+        TEST_HEX = "1c42dcc5672bb09bccf33fb1e9ab4a498af59a6dbd33b3d0cfb289b9e0e25fa5"
+        response = await self.client.relay_tx(TEST_HEX)
+        print(response.as_dict())
+
+        assert not response.is_err()
+
+        assert isinstance(response.result.tx_hash, str)
+
+    @pytest.mark.skip(reason="What is a payment?")
+    @pytest.mark.asyncio
+    async def test_rpcmethod_get_payments(self):
+        pass
+
+    @pytest.mark.skip(reason="Blocked by .get_payments()")
+    @pytest.mark.asyncio
+    async def test_rpcmethod_get_bulk_payments(self):
+        pass
+
+    @pytest.mark.asyncio
+    async def test_rpcmethod_incoming_transfers(self):
+        response = await self.client.incoming_transfers(TransferType.all)
+        print(response.as_dict())
+
+        assert not response.is_err()
+        # FIXME: This is probably blocked by needed existing transfers
+        # assert isinstance(response.result.transfers, list)
+
+    # ---------
+
+    @pytest.mark.asyncio
+    async def test_rpcmethod_get_version(self):
+        response = await self.client.get_version()
+        print(response.as_dict())
+
+        assert not response.is_err()
+        assert isinstance(response.result.version, int)

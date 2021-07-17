@@ -1,8 +1,26 @@
+# Copyright 2021 Rashad Alston
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+# and associated documentation files (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all copies or substantial
+# portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+# LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
+# EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+# USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 from xmrpy.t import Dict, List, Optional, Prim, Generic, T, Any
 from xmrpy._core import RpcError
 from xmrpy._http import HttpClient, Headers
 from xmrpy.utils import dump_dict
 from xmrpy.config import Config, config
+from xmrpy.const import TransferType
 from xmrpy._result import *
 
 
@@ -89,8 +107,8 @@ class Client:
     async def validate_address(
         self,
         address: str,
-        any_net_type: Optional[bool] = False,
-        allow_openalias: Optional[bool] = False,
+        any_net_type: bool = False,
+        allow_openalias: bool = False,
     ) -> _WalletRpcResponse[ValidateAddressResult]:
         data = self._attach_default_params(
             {
@@ -189,14 +207,14 @@ class Client:
     async def transfer(
         self,
         destinations: List[Dict[str, int]],
-        account_index: Optional[int] = 0,
-        subaddress_indices: Optional[List[int]] = [],
+        account_index: int = 0,
+        subaddress_indices: List[int] = [],
         priority: int = 0,
         mixin: int = 0,
         ring_size: int = 7,
         unlock_time: int = 0,
-        get_tx_key: Optional[bool] = True,
-        do_not_relay: Optional[bool] = False,
+        get_tx_key: bool = True,
+        do_not_relay: bool = False,
         get_tx_hex: bool = False,
         get_tx_metadata: bool = False,
     ) -> _WalletRpcResponse[TransferResult]:
@@ -224,14 +242,14 @@ class Client:
     async def transfer_split(
         self,
         destinations: List[Dict[str, int]],
-        account_index: Optional[int] = 0,
-        subaddress_indices: Optional[List[int]] = [],
+        account_index: int = 0,
+        subaddress_indices: List[int] = [],
         mixin: int = 0,
         ring_size: int = 7,
         unlock_time: int = 0,
-        get_tx_keys: Optional[bool] = True,
+        get_tx_keys: bool = True,
         priority: int = 0,
-        do_not_relay: Optional[bool] = False,
+        do_not_relay: bool = False,
         get_tx_hex: bool = False,
         new_algorithm: bool = False,
         get_tx_metadata: bool = False,
@@ -259,7 +277,7 @@ class Client:
         return _WalletRpcResponse(TransferSplitResult(rpcmsg["result"]), data)
 
     async def sign_transfer(
-        self, unsigned_txset: str, export_raw: Optional[bool] = False
+        self, unsigned_txset: str, export_raw: bool = False
     ) -> _WalletRpcResponse[SignTransferResult]:
         data = self._attach_default_params(
             {
@@ -272,6 +290,163 @@ class Client:
         )
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(SignTransferResult(rpcmsg["result"]), data)
+
+    async def submit_transfer(self, tx_data_hex: str) -> _WalletRpcResponse[SubmitTransferResult]:
+        data = self._attach_default_params(
+            {
+                "method": "submit_transfer",
+                "params": {"tx_data_hex": tx_data_hex},
+            }
+        )
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(SubmitTransferResult(rpcmsg["result"]), data)
+
+    async def sweep_dust(
+        self,
+        get_tx_keys: bool = True,
+        do_not_relay: bool = False,
+        get_tx_hex: bool = False,
+        get_tx_metadata: bool = False,
+    ):
+        data = self._attach_default_params(
+            {
+                "method": "sweep_dust",
+                "params": {
+                    "get_tx_keys": get_tx_keys,
+                    "do_not_relay": do_not_relay,
+                    "get_tx_hex": get_tx_hex,
+                    "get_tx_metadata": get_tx_metadata,
+                },
+            }
+        )
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(SweepDustResult(rpcmsg["result"]), data)
+
+    async def sweep_all(
+        self,
+        address: str,
+        account_index: int,
+        subaddr_indices: List[int] = [0],
+        priority: int = 0,
+        mixin: int = 0,
+        ring_size: int = 7,
+        unlock_time: int = 0,
+        get_tx_keys: Optional[bool] = True,
+        below_amount: Optional[int] = None,
+        do_not_relay: bool = False,
+        get_tx_hex: bool = False,
+        get_tx_metadata: bool = False,
+    ) -> _WalletRpcResponse[SweepAllResult]:
+        data = self._attach_default_params(
+            {
+                "methods": "sweep_all",
+                "params": {
+                    "address": address,
+                    "account_index": account_index,
+                    "subaddr_indices": subaddr_indices,
+                    "priority": priority,
+                    "mixin": mixin,
+                    "ring_size": ring_size,
+                    "unlock_time": unlock_time,
+                    "get_tx_keys": get_tx_keys,
+                    "below_amount": below_amount,
+                    "do_not_relay": do_not_relay,
+                    "get_tx_hex": get_tx_hex,
+                    "get_tx_metadata": get_tx_metadata,
+                },
+            }
+        )
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(SweepAllResult(rpcmsg["result"]), data)
+
+    async def sweep_single(
+        self,
+        address: str,
+        account_index: int,
+        key_image: str,
+        subaddr_indices: List[int] = [0],
+        priority: int = 0,
+        mixin: int = 0,
+        ring_size: int = 7,
+        unlock_time: int = 0,
+        get_tx_keys: Optional[bool] = True,
+        below_amount: Optional[int] = None,
+        do_not_relay: bool = False,
+        get_tx_hex: bool = False,
+        get_tx_metadata: bool = False,
+    ) -> _WalletRpcResponse[SweepAllResult]:
+        data = self._attach_default_params(
+            {
+                "methods": "sweep_all",
+                "params": {
+                    "address": address,
+                    "account_index": account_index,
+                    "subaddr_indices": subaddr_indices,
+                    "priority": priority,
+                    "mixin": mixin,
+                    "ring_size": ring_size,
+                    "key_image": key_image,
+                    "unlock_time": unlock_time,
+                    "get_tx_keys": get_tx_keys,
+                    "below_amount": below_amount,
+                    "do_not_relay": do_not_relay,
+                    "get_tx_hex": get_tx_hex,
+                    "get_tx_metadata": get_tx_metadata,
+                },
+            }
+        )
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(SweepAllResult(rpcmsg["result"]), data)
+
+    async def relay_tx(self, tx_hex: str) -> _WalletRpcResponse[RelayTxResult]:
+        data = self._attach_default_params({"method": "relay_tx", "params": {"hex": tx_hex}})
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(RelayTxResult(rpcmsg["result"]), data)
+
+    async def store(self) -> _WalletRpcResponse[StoreResult]:
+        data = self._attach_default_params({"method": "store"})
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(StoreResult(rpcmsg["result"]), data)
+
+    async def get_payments(self, payment_id: str) -> _WalletRpcResponse[GetPaymentsResult]:
+        data = self._attach_default_params({"method": "get_payments", "params": {"payment_id": payment_id}})
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(GetPaymentsResult(rpcmsg["result"]), data)
+
+    async def get_bulk_payments(
+        self, payment_ids: List[str], min_block_height: int
+    ) -> _WalletRpcResponse[GetBulkPaymentsResult]:
+        data = self._attach_default_params(
+            {
+                "method": "get_bulk_payments",
+                "params": {"payment_ids": payment_ids, "min_block_height": min_block_height},
+            }
+        )
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(GetBulkPaymentsResult(rpcmsg["result"]), data)
+
+    async def incoming_transfers(
+        self, transfer_type: TransferType, account_index: int = 0, subaddr_indices: Optional[List[int]] = None
+    ) -> _WalletRpcResponse[IncomingTransfersResult]:
+        data = self._attach_default_params(
+            {
+                "method": "incoming_transfers",
+                "params": {
+                    "transfer_type": transfer_type.value,
+                    "account_index": account_index,
+                    "subaddr_indices": subaddr_indices,
+                },
+            }
+        )
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(IncomingTransfersResult(rpcmsg["result"]), data)
+
+    # -------------
+
+    async def get_version(self) -> _WalletRpcResponse[GetVersionResult]:
+        data = self._attach_default_params({"method": "get_version"})
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(GetVersionResult(rpcmsg["result"]), data)
 
     def _attach_default_params(self, data: Dict[str, Any]) -> Dict[str, str]:
         payload = {"id": "0", "jsonrpc": "2.0"}
