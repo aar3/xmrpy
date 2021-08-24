@@ -3,6 +3,8 @@
 Based on the JSON RPC API available at https://www.getmonero.org/resources/developer-guides/wallet-rpc.htm
 
 
+<img src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Monero-Logo.svg/1280px-Monero-Logo.svg.png' height='100'>
+
 
 # RPC Methods
 - [x] set_daemon
@@ -23,26 +25,26 @@ Based on the JSON RPC API available at https://www.getmonero.org/resources/devel
 - [x] transfer
 - [x] transfer_split
 - [x] sign_transfer
-- [ ] submit_transfer
-- [ ] sweep_dust
-- [ ] sweep_all
-- [ ] sweep_single
-- [ ] relay_tx
-- [ ] store
-- [ ] get_payments
-- [ ] get_bulk_payments
-- [ ] incoming_transfers
-- [ ] query_key
-- [ ] make_integrated_address
-- [ ] split_integrated_address
-- [ ] stop_wallet
-- [ ] rescan_blockchain
-- [ ] set_tx_notes
-- [ ] get_tx_notes
-- [ ] set_attribute
-- [ ] get_attribute
-- [ ] get_tx_key
-- [ ] check_tx_key
+- [x] submit_transfer
+- [x] sweep_dust
+- [x] sweep_all
+- [x] sweep_single
+- [x] relay_tx
+- [x] store
+- [x] get_payments
+- [x] get_bulk_payments
+- [x] incoming_transfers
+- [x] query_key
+- [x] make_integrated_address
+- [x] split_integrated_address
+- [x] stop_wallet
+- [x] rescan_blockchain
+- [x] set_tx_notes
+- [x] get_tx_notes
+- [x] set_attribute
+- [x] get_attribute
+- [x] get_tx_key
+- [x] check_tx_key
 - [ ] get_tx_proof
 - [ ] check_tx_proof
 - [ ] get_spend_proof
