@@ -21,7 +21,9 @@ from xmrpy.utils import dump_dict
 
 
 class DataClass:
-    def __init__(self, data: Union[str, Mapping[str, Prim]], **kwargs: Dict[str, Prim]):
+    def __init__(
+        self, data: Union[str, Mapping[str, Prim]], **kwargs: Dict[str, Prim]
+    ):
         if data:
             if isinstance(data, str):
                 as_dict: Dict[str, Prim] = json.loads(data)
@@ -29,7 +31,9 @@ class DataClass:
             elif isinstance(data, dict):
                 self._inject_props(data)
             else:
-                raise TypeError("Illegal DataClass value '{}'".format(type(data)))
+                raise TypeError(
+                    "Illegal DataClass value '{}'".format(type(data))
+                )
 
         elif kwargs:
             self._inject_props(kwargs)

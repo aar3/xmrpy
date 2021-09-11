@@ -45,13 +45,17 @@ class _WalletRpcResponse(Generic[T]):
 
 
 class Client:
-    def __init__(self, conf: Optional[Config] = None, headers: Optional[Headers] = None):
+    def __init__(
+        self, conf: Optional[Config] = None, headers: Optional[Headers] = None
+    ):
         self._config = conf or config
         self._http = HttpClient(headers, timeout=self._config.HTTP_READ_TIMEOUT)
         self.url = "http://" + self._config.WALLET_RPC_ADDR + "/json_rpc"
 
     def auth(self):
-        self._http.set_digest_auth(self._config.DIGEST_USER_NAME, self._config.DIGEST_USER_PASSWD)
+        self._http.set_digest_auth(
+            self._config.DIGEST_USER_NAME, self._config.DIGEST_USER_PASSWD
+        )
         return self
 
     async def get_languages(self) -> _WalletRpcResponse[GetLanguagesResult]:
@@ -72,8 +76,12 @@ class Client:
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(GetBalanceResult(rpcmsg["result"]), data)
 
-    async def get_address_index(self, address: str) -> _WalletRpcResponse[GetAddressIndexResult]:
-        data = self._attach_default_params({"method": "get_address_index", "params": {"address": address}})
+    async def get_address_index(
+        self, address: str
+    ) -> _WalletRpcResponse[GetAddressIndexResult]:
+        data = self._attach_default_params(
+            {"method": "get_address_index", "params": {"address": address}}
+        )
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(GetAddressIndexResult(rpcmsg["result"]), data)
 
@@ -123,7 +131,9 @@ class Client:
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(ValidateAddressResult(rpcmsg["result"]), data)
 
-    async def get_accounts(self, tag: Optional[str] = None) -> _WalletRpcResponse[GetAccountsResult]:
+    async def get_accounts(
+        self, tag: Optional[str] = None
+    ) -> _WalletRpcResponse[GetAccountsResult]:
         data = self._attach_default_params(
             {
                 "method": "get_accounts",
@@ -135,7 +145,9 @@ class Client:
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(GetAccountsResult(rpcmsg["result"]), data)
 
-    async def create_account(self, label: Optional[str] = None) -> _WalletRpcResponse[CreateAccountResult]:
+    async def create_account(
+        self, label: Optional[str] = None
+    ) -> _WalletRpcResponse[CreateAccountResult]:
         data = self._attach_default_params(
             {
                 "method": "create_account",
@@ -147,7 +159,9 @@ class Client:
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(CreateAccountResult(rpcmsg["result"]), data)
 
-    async def label_account(self, account_index: int, label: str) -> _WalletRpcResponse[LabelAccountResult]:
+    async def label_account(
+        self, account_index: int, label: str
+    ) -> _WalletRpcResponse[LabelAccountResult]:
         data = self._attach_default_params(
             {
                 "method": "label_account",
@@ -160,7 +174,9 @@ class Client:
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(LabelAccountResult(rpcmsg["result"]), data)
 
-    async def tag_accounts(self, tag: str, accounts: List[int]) -> _WalletRpcResponse[TagAccountsResult]:
+    async def tag_accounts(
+        self, tag: str, accounts: List[int]
+    ) -> _WalletRpcResponse[TagAccountsResult]:
         data = self._attach_default_params(
             {
                 "method": "tag_accounts",
@@ -170,7 +186,9 @@ class Client:
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(TagAccountsResult(rpcmsg["result"]), data)
 
-    async def get_account_tags(self) -> _WalletRpcResponse[GetAccountTagsResult]:
+    async def get_account_tags(
+        self,
+    ) -> _WalletRpcResponse[GetAccountTagsResult]:
         data = self._attach_default_params(
             (
                 {
@@ -182,8 +200,12 @@ class Client:
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(GetAccountTagsResult(rpcmsg["result"]), data)
 
-    async def untag_accounts(self, accounts: List[int]) -> _WalletRpcResponse[UntagAccountsResult]:
-        data = self._attach_default_params({"method": "untag_accounts", "params": {"accounts": accounts}})
+    async def untag_accounts(
+        self, accounts: List[int]
+    ) -> _WalletRpcResponse[UntagAccountsResult]:
+        data = self._attach_default_params(
+            {"method": "untag_accounts", "params": {"accounts": accounts}}
+        )
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(UntagAccountsResult(rpcmsg["result"]), data)
 
@@ -197,7 +219,9 @@ class Client:
             }
         )
         rpcmsg = await self._http.post(self.url, data=data)
-        return _WalletRpcResponse(SetAccountTagDescriptionResult(rpcmsg["result"]), data)
+        return _WalletRpcResponse(
+            SetAccountTagDescriptionResult(rpcmsg["result"]), data
+        )
 
     async def get_height(self) -> _WalletRpcResponse[GetHeightResult]:
         data = self._attach_default_params({"method": "get_height"})
@@ -291,7 +315,9 @@ class Client:
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(SignTransferResult(rpcmsg["result"]), data)
 
-    async def submit_transfer(self, tx_data_hex: str) -> _WalletRpcResponse[SubmitTransferResult]:
+    async def submit_transfer(
+        self, tx_data_hex: str
+    ) -> _WalletRpcResponse[SubmitTransferResult]:
         data = self._attach_default_params(
             {
                 "method": "submit_transfer",
@@ -399,7 +425,9 @@ class Client:
         return _WalletRpcResponse(SweepAllResult(rpcmsg["result"]), data)
 
     async def relay_tx(self, tx_hex: str) -> _WalletRpcResponse[RelayTxResult]:
-        data = self._attach_default_params({"method": "relay_tx", "params": {"hex": tx_hex}})
+        data = self._attach_default_params(
+            {"method": "relay_tx", "params": {"hex": tx_hex}}
+        )
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(RelayTxResult(rpcmsg["result"]), data)
 
@@ -408,8 +436,12 @@ class Client:
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(StoreResult(rpcmsg["result"]), data)
 
-    async def get_payments(self, payment_id: str) -> _WalletRpcResponse[GetPaymentsResult]:
-        data = self._attach_default_params({"method": "get_payments", "params": {"payment_id": payment_id}})
+    async def get_payments(
+        self, payment_id: str
+    ) -> _WalletRpcResponse[GetPaymentsResult]:
+        data = self._attach_default_params(
+            {"method": "get_payments", "params": {"payment_id": payment_id}}
+        )
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(GetPaymentsResult(rpcmsg["result"]), data)
 
@@ -419,14 +451,20 @@ class Client:
         data = self._attach_default_params(
             {
                 "method": "get_bulk_payments",
-                "params": {"payment_ids": payment_ids, "min_block_height": min_block_height},
+                "params": {
+                    "payment_ids": payment_ids,
+                    "min_block_height": min_block_height,
+                },
             }
         )
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(GetBulkPaymentsResult(rpcmsg["result"]), data)
 
     async def incoming_transfers(
-        self, transfer_type: TransferType, account_index: int = 0, subaddr_indices: Optional[List[int]] = None
+        self,
+        transfer_type: TransferType,
+        account_index: int = 0,
+        subaddr_indices: Optional[List[int]] = None,
     ) -> _WalletRpcResponse[IncomingTransfersResult]:
         data = self._attach_default_params(
             {
@@ -439,75 +477,271 @@ class Client:
             }
         )
         rpcmsg = await self._http.post(self.url, data=data)
-        return _WalletRpcResponse(IncomingTransfersResult(rpcmsg["result"]), data)
+        return _WalletRpcResponse(
+            IncomingTransfersResult(rpcmsg["result"]), data
+        )
 
-    async def query_key(self, key_type: str) -> _WalletRpcResponse[QueryKeyResult]:
-        data = self._attach_default_params({"method": "query_key", "params": {"key_type": key_type}})
+    async def query_key(
+        self, key_type: str
+    ) -> _WalletRpcResponse[QueryKeyResult]:
+        data = self._attach_default_params(
+            {"method": "query_key", "params": {"key_type": key_type}}
+        )
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(QueryKeyResult(rpcmsg["result"]), data)
 
     async def make_integrated_address(
-        self, standard_address: Optional[str] = None, payment_id: Optional[str] = None
+        self,
+        standard_address: Optional[str] = None,
+        payment_id: Optional[str] = None,
     ) -> _WalletRpcResponse[MakeIntegratedAddressResult]:
         data = self._attach_default_params(
             {
                 "method": "make_integrated_address",
-                "params": {"standard_address": standard_address, "payment_id": payment_id},
+                "params": {
+                    "standard_address": standard_address,
+                    "payment_id": payment_id,
+                },
             }
         )
         rpcmsg = await self._http.post(self.url, data=data)
-        return _WalletRpcResponse(MakeIntegratedAddressResult(rpcmsg["result"]), data)
+        return _WalletRpcResponse(
+            MakeIntegratedAddressResult(rpcmsg["result"]), data
+        )
 
     async def split_integrated_address(
         self, integrated_address: str
     ) -> _WalletRpcResponse[SplitIntegratedAddressResult]:
         data = self._attach_default_params(
-            {"method": "split_integrated_address", "params": {"integrated_address": integrated_address}}
+            {
+                "method": "split_integrated_address",
+                "params": {"integrated_address": integrated_address},
+            }
         )
         rpcmsg = await self._http.post(self.url, data=data)
-        return _WalletRpcResponse(SplitIntegratedAddressResult(rpcmsg["result"]), data)
+        return _WalletRpcResponse(
+            SplitIntegratedAddressResult(rpcmsg["result"]), data
+        )
 
     async def stop_wallet(self) -> _WalletRpcResponse[StopWalletResult]:
         data = self._attach_default_params({"method": "stop_wallet"})
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(StopWalletResult(rpcmsg["result"]), data)
 
-    async def rescan_blockchain(self) -> _WalletRpcResponse[RescanBlockchainResult]:
+    async def rescan_blockchain(
+        self,
+    ) -> _WalletRpcResponse[RescanBlockchainResult]:
         data = self._attach_default_params({"method": "rescan_blockchain"})
         rpcmsg = await self._http.post(self.url, data=data)
-        return _WalletRpcResponse(RescanBlockchainResult(rpcmsg["result"]), data)
+        return _WalletRpcResponse(
+            RescanBlockchainResult(rpcmsg["result"]), data
+        )
 
-    async def set_tx_notes(self, txids: List[str], notes: List[str]) -> _WalletRpcResponse[SetTxNotesResult]:
-        data = self._attach_default_params({"method": "set_tx_notes", "params": {"txids": txids, "notes": notes}})
+    async def set_tx_notes(
+        self, txids: List[str], notes: List[str]
+    ) -> _WalletRpcResponse[SetTxNotesResult]:
+        data = self._attach_default_params(
+            {
+                "method": "set_tx_notes",
+                "params": {"txids": txids, "notes": notes},
+            }
+        )
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(SetTxNotesResult(rpcmsg["result"]), data)
 
-    async def get_tx_notes(self, txids: List[str]) -> _WalletRpcResponse[GetTxNotesResult]:
-        data = self._attach_default_params({"method": "get_tx_notes", "params": {"txids": txids}})
+    async def get_tx_notes(
+        self, txids: List[str]
+    ) -> _WalletRpcResponse[GetTxNotesResult]:
+        data = self._attach_default_params(
+            {"method": "get_tx_notes", "params": {"txids": txids}}
+        )
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(GetTxNotesResult(rpcmsg["result"]), data)
 
-    async def set_attribute(self, key: str, value: str) -> _WalletRpcResponse[SetAttributeResult]:
-        data = self._attach_default_params({"method": "set_attribute", "params": {"key": key, "value": value}})
+    async def set_attribute(
+        self, key: str, value: str
+    ) -> _WalletRpcResponse[SetAttributeResult]:
+        data = self._attach_default_params(
+            {"method": "set_attribute", "params": {"key": key, "value": value}}
+        )
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(SetAttributeResult(rpcmsg["result"]), data)
 
-    async def get_attribute(self, key: str) -> _WalletRpcResponse[GetAttributeResult]:
-        data = self._attach_default_params({"method": "get_attribute", "params": {"key": key}})
+    async def get_attribute(
+        self, key: str
+    ) -> _WalletRpcResponse[GetAttributeResult]:
+        data = self._attach_default_params(
+            {"method": "get_attribute", "params": {"key": key}}
+        )
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(GetAttributeResult(rpcmsg["result"]), data)
 
     async def get_tx_key(self, txid: str) -> _WalletRpcResponse[GetTxKeyResult]:
-        data = self._attach_default_params({"method": "get_tx_key", "params": {"txid": txid}})
+        data = self._attach_default_params(
+            {"method": "get_tx_key", "params": {"txid": txid}}
+        )
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(GetTxKeyResult(rpcmsg["result"]), data)
 
-    async def check_tx_key(self, txid: str, tx_key: str, address: str) -> _WalletRpcResponse[CheckTxKeyResult]:
+    async def check_tx_key(
+        self, txid: str, tx_key: str, address: str
+    ) -> _WalletRpcResponse[CheckTxKeyResult]:
         data = self._attach_default_params(
-            {"method": "check_tx_key", "params": {"txid": txid, "tx_key": tx_key, "address": address}}
+            {
+                "method": "check_tx_key",
+                "params": {"txid": txid, "tx_key": tx_key, "address": address},
+            }
         )
         rpcmsg = await self._http.post(self.url, data=data)
         return _WalletRpcResponse(CheckTxKeyResult(rpcmsg["result"]), data)
+
+    async def get_tx_proof(
+        self, txid: str, address: str, message: Optional[str] = None
+    ) -> _WalletRpcResponse[GetTxProofResult]:
+        data = self._attach_default_params(
+            {
+                "method": "get_tx_proof",
+                "params": {
+                    "txid": txid,
+                    "address": address,
+                    "message": message,
+                },
+            }
+        )
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(GetTxProofResult(rpcmsg["result"]), data)
+
+    async def check_tx_proof(
+        self,
+        txid: str,
+        address: str,
+        signature: str,
+        message: Optional[str] = None,
+    ) -> _WalletRpcResponse[CheckTxProofResult]:
+        data = self._attach_default_params(
+            {
+                "method": "check_tx_proof",
+                "params": {
+                    "txid": txid,
+                    "address": address,
+                    "message": message,
+                    "signature": signature,
+                },
+            }
+        )
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(CheckTxProofResult(rpcmsg["result"]), data)
+
+    async def get_spend_proof(
+        self, txid: str, message: Optional[str] = None
+    ) -> _WalletRpcResponse[GetSpendProofResult]:
+        data = self._attach_default_params(
+            {
+                "method": "get_spend_proof",
+                "params": {"txid": txid, "message": message},
+            }
+        )
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(GetSpendProofResult(rpcmsg["result"]), data)
+
+    async def check_spend_proof(
+        self, txid: str, signature: str, message: Optional[str]
+    ) -> _WalletRpcResponse[CheckSpendProofResult]:
+        data = self._attach_default_params(
+            {
+                "method": "check_spend_proof",
+                "params": {
+                    "txid": txid,
+                    "signature": signature,
+                    "message": message,
+                },
+            }
+        )
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(CheckSpendProofResult(rpcmsg["result"]), data)
+
+    async def get_reserve_proof(
+        self,
+        all: bool,
+        account_index: int,
+        amount: int,
+        message: Optional[str] = None,
+    ) -> _WalletRpcResponse[GetReserveProofResult]:
+        data = self._attach_default_params(
+            {
+                "method": "get_reserve_proof",
+                "params": {
+                    "all": all,
+                    "account_index": account_index,
+                    "amount": amount,
+                    "message": message,
+                },
+            }
+        )
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(GetReserveProofResult(rpcmsg["result"]), data)
+
+    async def check_reserve_proof(
+        self, address: str, signature: str, message: Optional[str] = None
+    ) -> _WalletRpcResponse[CheckReserveProofResult]:
+        data = self._attach_default_params(
+            {
+                "method": "check_reserve_proof",
+                "params": {
+                    "address": address,
+                    "signature": signature,
+                    "message": message,
+                },
+            }
+        )
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(
+            CheckReserveProofResult(rpcmsg["result"]), data
+        )
+
+    async def get_transfers(self):
+        data = self._attach_default_params({"method": "get_transfers"})
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(GetTransfersResult(rpcmsg["result"]), data)
+
+    async def get_transfer_by_txid(
+        self, txid: str, account_index: int
+    ) -> _WalletRpcResponse[GetTransferByTxId]:
+        data = self._attach_default_params(
+            {
+                "method": "get_transfer_by_txid",
+                "txid": txid,
+                "account_index": account_index,
+            }
+        )
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(GetTransferByTxId(rpcmsg["result"]), data)
+
+    async def describe_transfer(self):
+        raise NotImplementedError
+
+    async def sign(self, data: str) -> _WalletRpcResponse[SignResult]:
+        data_ = self._attach_default_params(
+            {"method": "sign", "params": {"data": data}}
+        )
+        rpcmsg = await self._http.post(self.url, data=data_)
+        return _WalletRpcResponse(SignResult(rpcmsg["result"]), data_)
+
+    async def verify(
+        self, data: str, address: str, signature: str
+    ) -> _WalletRpcResponse[VerifyResult]:
+        data_ = self._attach_default_params(
+            {
+                "method": "verify",
+                "params": {
+                    "data": data,
+                    "address": address,
+                    "signature": signature,
+                },
+            }
+        )
+        rpcmsg = await self._http.post(self.url, data=data_)
+        return _WalletRpcResponse(VerifyResult(rpcmsg["result"]), data_)
 
     # -------------
 

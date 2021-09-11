@@ -13,7 +13,7 @@ CMD_PIP_INSTALL = $(foreach file, $(wildcard $(REQUIREMENTS_DIR)/*), $(PIP) inst
 CMD_PIP_FREEZE = $(PIP) freeze > $(REQUIREMENTS_DIR)/requirements.lock
 
 # code style, linting, and formatting
-CMD_BLACK_FORMAT = find . -type d -path ./venv -prune -false -o -name "*.py" | xargs $(PYTHON) -m black -l 120
+CMD_BLACK_FORMAT = find . -type d -path ./venv -prune -false -o -name "*.py" | xargs $(PYTHON) -m black -l 80
 CMD_PYLINT = find . -type d -path ./venv -prune -false -o -name "*.py" | xargs $(PYTHON) -m pylint --rcfile $(SOURCE)/.pylintrc
 CMD_MYPY_INIT = $(PYTHON) -m mypy --config-file $(PWD)/mypy.ini xmrpy/
 

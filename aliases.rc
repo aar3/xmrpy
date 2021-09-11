@@ -1,0 +1,1 @@
+alias test-only="python -m pytest -s -v $1"

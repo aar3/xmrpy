@@ -23,17 +23,24 @@ __all__ = [
     "CreateAddressResult",
     "MakeIntegratedAddressResult",
     "CreateAddressResult",
+    "CheckReserveProofResult",
+    "GetTransferByTxId",
+    "GetReserveProofResult",
+    "SignResult",
     "StopWalletResult",
     "GetAttributeResult",
     "SetTxNotesResult",
     "CheckTxKeyResult",
     "GetAccountsResult",
     "RescanBlockchainResult",
+    "GetTransfersResult",
     "SplitIntegratedAddressResult",
     "GetTxNotesResult",
+    "VerifyResult",
     "GetAccountTagsResult",
     "GetBulkPaymentsResult",
     "GetAddressIndexResult",
+    "CheckSpendProofResult",
     "GetTxKeyResult",
     "GetBalanceResult",
     "GetHeightResult",
@@ -58,6 +65,9 @@ __all__ = [
     "QueryKeyResult",
     "ValidateAddressResult",
     "GetVersionResult",
+    "GetTxProofResult",
+    "CheckTxProofResult",
+    "GetSpendProofResult",
 ]
 
 
@@ -301,6 +311,83 @@ class CheckTxKeyResult(DataClass):
     confirmations: int
     in_pool: bool
     recevied: bool
+
+
+class GetTxProofResult(DataClass):
+    signature: str
+
+
+class CheckTxProofResult(DataClass):
+    confirmations: int
+    good: bool
+    in_pool: bool
+    received: int
+
+
+class GetSpendProofResult(DataClass):
+    signature: str
+
+
+class CheckSpendProofResult(DataClass):
+    good: bool
+
+
+class GetReserveProofResult(DataClass):
+    signature: str
+
+
+class CheckReserveProofResult(DataClass):
+    good: bool
+    spent: int
+    total: int
+
+
+_SubaddrIndex = Dict[str, int]
+
+
+class _FullTransfer(DataClass):
+    address: str
+    amount: int
+    confirmations: int
+    double_spend_seen: int
+    fee: int
+    height: int
+    note: str
+    payment_id: str
+    subaddr_index: _SubaddrIndex
+    suggested_confirmations_threshold: int
+    timestamp: int
+    txid: str
+    type: str
+    unlock_time: int
+
+
+class GetTransfersResult(DataClass):
+    # in: List[_FullTransfer]
+    out: List[_FullTransfer]
+    pending: List[_FullTransfer]
+    failed: List[_FullTransfer]
+    pool: List[_FullTransfer]
+
+    @property
+    def in_(self) -> List[_FullTransfer]:
+        t: List[_FullTransfer] = self.__dict__["in"]
+        return t
+
+
+class GetTransferByTxId(DataClass):
+    tranfer: _FullTransfer
+
+
+class SignResult(DataClass):
+    signature: str
+
+
+class VerifyResult(DataClass):
+    good: bool
+    old: bool
+    signature_type: str
+    version: int
 
 
 # ---------

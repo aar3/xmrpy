@@ -2,6 +2,11 @@
 
 Based on the JSON RPC API available at https://www.getmonero.org/resources/developer-guides/wallet-rpc.htm
 
+![GitHub Pipenv locked dependency version](https://img.shields.io/github/pipenv/locked/dependency-version/aar3/xmrpy/httpx)
+
+![GitHub issues](https://img.shields.io/github/issues/aar3/xmrpy)
+
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/aar3/xmrpy)
 
 <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Monero-Logo.svg/1280px-Monero-Logo.svg.png' height='100'>
 
@@ -45,17 +50,17 @@ Based on the JSON RPC API available at https://www.getmonero.org/resources/devel
 - [x] get_attribute
 - [x] get_tx_key
 - [x] check_tx_key
-- [ ] get_tx_proof
-- [ ] check_tx_proof
-- [ ] get_spend_proof
-- [ ] check_spend_proof
-- [ ] get_reserve_proof
-- [ ] check_reserve_proof
-- [ ] get_transfers
-- [ ] get_transfer_by_txid
-- [ ] describe_transfer
-- [ ] sign
-- [ ] verify
+- [x] get_tx_proof
+- [x] check_tx_proof
+- [x] get_spend_proof
+- [x] check_spend_proof
+- [x] get_reserve_proof
+- [x] check_reserve_proof
+- [x] get_transfers
+- [x] get_transfer_by_txid
+- [x] describe_transfer
+- [x] sign
+- [x] verify
 - [ ] export_outputs
 - [ ] import_outputs
 - [ ] export_key_images
@@ -86,4 +91,4 @@ Based on the JSON RPC API available at https://www.getmonero.org/resources/devel
 - [ ] finalize_multisig
 - [ ] sign_multisig
 - [ ] submit_multisig
-- [ ] get_version
+- [x] get_version
