@@ -4,8 +4,16 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+psutil = "*"
+httpx = "*"
+
 
 [dev-packages]
+black = "21.6b0"
+pylint = "*"
+mypy = "*"
+pytest = "*"
+pytest-asyncio = "*"
 
 [requires]
 python_version = "3.8"
