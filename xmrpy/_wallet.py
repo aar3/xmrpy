@@ -16,7 +16,7 @@
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from xmrpy.t import Dict, List, Optional, Prim, Generic, T, Any
-from xmrpy._core import RpcError
+from xmrpy._core import RpcError, DataClass
 from xmrpy._http import HttpClient, Headers
 from xmrpy.utils import dump_dict
 from xmrpy.config import Config, config
@@ -27,8 +27,8 @@ from xmrpy._result import *
 class _WalletRpcResponse(Generic[T]):
     error: Optional[RpcError]
 
-    def __init__(self, result: T, data: Dict[str, str]):
-        self.result = result
+    def __init__(self, result: DataClass, data: Dict[str, str]):
+        self.result = self._build_result(result)
         self.id = data["id"]
         self.jsonrpc = data["jsonrpc"]
 
@@ -42,6 +42,12 @@ class _WalletRpcResponse(Generic[T]):
 
     def as_dict(self) -> Dict[str, Prim]:
         return dump_dict(self.__dict__)
+
+    def _build_result(self, result: DataClass):
+        r = {}
+        for key, value in result.items():
+            r[key] = DataClass(data=value) if isinstance(value, dict) else value
+        return DataClass(data=r)
 
 
 class Client:
@@ -742,6 +748,78 @@ class Client:
         )
         rpcmsg = await self._http.post(self.url, data=data_)
         return _WalletRpcResponse(VerifyResult(rpcmsg["result"]), data_)
+
+    async def export_outputs(
+        self, all: bool = False
+    ) -> _WalletRpcResponse[ExportOutputsResult]:
+        data = self._attach_default_params(
+            {"method": "export_outputs", "params": {"all": all}}
+        )
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(ExportOutputsResult(rpcmsg["result"]), data)
+
+    async def import_outputs(
+        self, outputs_data_hex: str
+    ) -> _WalletRpcResponse[ImportOutputsResult]:
+        data = self._attach_default_params(
+            {
+                "method": "import_outputs",
+                "params": {"outputs_data_hex": outputs_data_hex},
+            }
+        )
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(ImportOutputsResult(rpcmsg["result"]), data)
+
+    async def export_key_images(
+        self, all: bool = False
+    ) -> _WalletRpcResponse[ExportKeyImagesResult]:
+        data = self._attach_default_params(
+            {"method": "export_key_images", "params": {"all": all}}
+        )
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(ExportKeyImagesResult(rpcmsg["result"]), data)
+
+    async def import_key_images(
+        self, signed_key_images: List[SignedKeyImage]
+    ) -> _WalletRpcResponse[ImportKeyImagesResult]:
+        data = self._attach_default_params(
+            {
+                "method": "import_key_images",
+                "params": {"signed_key_images": signed_key_images},
+            }
+        )
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(ImportKeyImagesResult(rpcmsg["result"]), data)
+
+    async def make_uri(
+        self,
+        address: str,
+        amount: Optional[int] = None,
+        payment_id: Optional[str] = None,
+        recipient_name: Optional[str] = None,
+        tx_description: Optional[str] = None,
+    ) -> _WalletRpcResponse[MakeUriResult]:
+        data = self._attach_default_params(
+            {
+                "method": "make_uri",
+                "params": {
+                    "address": address,
+                    "amount": amount,
+                    "payment_id": payment_id,
+                    "recipient_name": recipient_name,
+                    "tx_description": tx_description,
+                },
+            }
+        )
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(MakeUriResult(rpcmsg["result"]), data)
+
+    async def parse_uri(self, uri: str) -> _WalletRpcResponse[ParseUriResult]:
+        data = self._attach_default_params(
+            {"method": "parse_uri", "params": {"uri": uri}}
+        )
+        rpcmsg = await self._http.post(self.url, data=data)
+        return _WalletRpcResponse(ParseUriResult(rpcmsg["result"]), data)
 
     # -------------
 

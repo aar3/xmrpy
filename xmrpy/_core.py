@@ -50,6 +50,9 @@ class DataClass:
     def __contains__(self, key: str) -> bool:
         return key in self.__dict__
 
+    def items(self):
+        return self.__dict__.items()
+
 
 class RpcError(DataClass):
     code: int

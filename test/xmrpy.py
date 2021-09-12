@@ -395,6 +395,52 @@ class TestWalletClient:
 
         assert response.result.good
 
+    @pytest.mark.asyncio
+    async def test_rpcmethod__export_outputs(self):
+        response = await self.client.export_outputs()
+        assert not response.is_err()
+
+        print(response.as_dict())
+
+        assert isinstance(response.result.outputs_data_hex, str)
+
+    @pytest.mark.skip(reason="Blocked by unknown dependency")
+    @pytest.mark.asyncio
+    async def test_rpcmethod__import_outputs(self):
+        pass
+
+    @pytest.mark.asyncio
+    async def test_rpcmethod__export_key_images(self):
+        response = await self.client.export_key_images()
+        assert not response.is_err()
+
+        print(response.as_dict())
+
+    @pytest.mark.skip(reason="Blocked by unknown dependency")
+    @pytest.mark.asyncio
+    async def test_rpcmethod__import_key_images(self):
+        pass
+
+    @pytest.mark.asyncio
+    async def test_rpcmethod__make_uri(self):
+        response = await self.client.make_uri(TEST_ADDR)
+        assert not response.is_err()
+
+        print(response.as_dict())
+
+        assert isinstance(response.result.uri, str)
+
+    @pytest.mark.asyncio
+    async def test_rpcmethod__parse_uri(self):
+        uri_resp = await self.client.make_uri(TEST_ADDR)
+
+        response = await self.client.parse_uri(uri_resp.result.uri)
+        assert not response.is_err()
+
+        print(response.as_dict())
+
+        assert isinstance(response.result.uri.address, str)
+
     # ---------
 
     @pytest.mark.asyncio

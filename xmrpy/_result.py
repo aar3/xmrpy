@@ -22,12 +22,19 @@ __all__ = [
     "CreateAccountResult",
     "CreateAddressResult",
     "MakeIntegratedAddressResult",
+    "ParseUriResult",
     "CreateAddressResult",
+    "ImportOutputsResult",
+    "MakeUriResult",
+    "ExportKeyImagesResult",
     "CheckReserveProofResult",
+    "SignedKeyImage",
+    "ImportKeyImagesResult",
     "GetTransferByTxId",
     "GetReserveProofResult",
     "SignResult",
     "StopWalletResult",
+    "ExportOutputsResult",
     "GetAttributeResult",
     "SetTxNotesResult",
     "CheckTxKeyResult",
@@ -388,6 +395,46 @@ class VerifyResult(DataClass):
     old: bool
     signature_type: str
     version: int
+
+
+class ExportOutputsResult(DataClass):
+    outputs_data_hex: str
+
+
+class ImportOutputsResult(DataClass):
+    num_imported: int
+
+
+class SignedKeyImage(DataClass):
+    key_image: str
+    signature: str
+
+
+class ExportKeyImagesResult(DataClass):
+    signed_key_images: List[SignedKeyImage]
+    offset: int
+
+
+class ImportKeyImagesResult(DataClass):
+    height: int
+    spent: int
+    unspent: int
+
+
+class MakeUriResult(DataClass):
+    uri: str
+
+
+class _Uri(DataClass):
+    address: str
+    amount: int
+    payment_id: str
+    recipient_name: str
+    tx_description: str
+
+
+class ParseUriResult(DataClass):
+    uri: _Uri
 
 
 # ---------

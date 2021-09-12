@@ -61,12 +61,12 @@ Based on the JSON RPC API available at https://www.getmonero.org/resources/devel
 - [x] describe_transfer
 - [x] sign
 - [x] verify
-- [ ] export_outputs
-- [ ] import_outputs
-- [ ] export_key_images
-- [ ] import_key_images
-- [ ] make_uri
-- [ ] parse_uri
+- [x] export_outputs
+- [x] import_outputs
+- [x] export_key_images
+- [x] import_key_images
+- [x] make_uri
+- [x] parse_uri
 - [ ] get_address_book
 - [ ] add_address_book
 - [ ] edit_address_book
