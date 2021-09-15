@@ -15,67 +15,8 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from xmrpy._core import DataClass
-from xmrpy.t import List, Dict, Any
-
-__all__ = [
-    "CreateAccountResult",
-    "CreateAddressResult",
-    "MakeIntegratedAddressResult",
-    "ParseUriResult",
-    "CreateAddressResult",
-    "ImportOutputsResult",
-    "MakeUriResult",
-    "ExportKeyImagesResult",
-    "CheckReserveProofResult",
-    "SignedKeyImage",
-    "ImportKeyImagesResult",
-    "GetTransferByTxId",
-    "GetReserveProofResult",
-    "SignResult",
-    "StopWalletResult",
-    "ExportOutputsResult",
-    "GetAttributeResult",
-    "SetTxNotesResult",
-    "CheckTxKeyResult",
-    "GetAccountsResult",
-    "RescanBlockchainResult",
-    "GetTransfersResult",
-    "SplitIntegratedAddressResult",
-    "GetTxNotesResult",
-    "VerifyResult",
-    "GetAccountTagsResult",
-    "GetBulkPaymentsResult",
-    "GetAddressIndexResult",
-    "CheckSpendProofResult",
-    "GetTxKeyResult",
-    "GetBalanceResult",
-    "GetHeightResult",
-    "GetPaymentsResult",
-    "GetLanguagesResult",
-    "LabelAccountResult",
-    "IncomingTransfersResult",
-    "SetAttributeResult",
-    "LabelAddressResult",
-    "SetAccountTagDescriptionResult",
-    "TagAccountsResult",
-    "SweepAllResult",
-    "TransferResult",
-    "TransferSplitResult",
-    "UntagAccountsResult",
-    "SignTransferResult",
-    "SubmitTransferResult",
-    "SweepSingleResult",
-    "RelayTxResult",
-    "SweepDustResult",
-    "StoreResult",
-    "QueryKeyResult",
-    "ValidateAddressResult",
-    "GetVersionResult",
-    "GetTxProofResult",
-    "CheckTxProofResult",
-    "GetSpendProofResult",
-]
+import enum
+from xmrpy.t import List, Dict, Any, DataClass
 
 
 class GetLanguagesResult(DataClass):
@@ -437,8 +378,105 @@ class ParseUriResult(DataClass):
     uri: _Uri
 
 
-# ---------
+class _AddressBookEntry(DataClass):
+    address: str
+    descrpition: str
+    index: int
+    payment_id: str
+
+
+class GetAddressBookResult(DataClass):
+    entries: List[_AddressBookEntry]
+
+
+class AddAddressBookResult(DataClass):
+    index: int
 
 
 class GetVersionResult(DataClass):
     version: int
+
+
+class EditAddressBookResult(DataClass):
+    pass
+
+
+class DeleteAddressBookResult(DataClass):
+    pass
+
+
+class RefreshResult(DataClass):
+    pass
+
+
+class AutoRefreshResult(DataClass):
+    pass
+
+
+class RescanSpentResult(DataClass):
+    pass
+
+
+class Result(enum.Enum):
+    CheckReserveProof = CheckReserveProofResult
+    CheckSpendProof = CheckSpendProofResult
+    CheckTxKey = CheckTxKeyResult
+    GetAddressBook = GetAddressBookResult
+    CheckTxProof = CheckTxProofResult
+    CreateAccount = CreateAccountResult
+    CreateAddress = CreateAddressResult
+    ExportKeyImages = ExportKeyImagesResult
+    ExportOutputs = GetAccountsResult
+    GetAccounts = GetAccountsResult
+    GetAccountTags = GetAccountTagsResult
+    GetAddressIndex = GetAddressIndexResult
+    GetAttribute = GetAttributeResult
+    GetBalance = GetBalanceResult
+    GetBulkPayments = GetBulkPaymentsResult
+    GetHeight = GetHeightResult
+    GetLanguages = GetLanguagesResult
+    GetPayments = GetPaymentsResult
+    GetReserveProof = GetReserveProofResult
+    GetSpendProof = GetSpendProofResult
+    GetTransferByTxId = GetTransfersResult
+    GetTransfers = GetTransfersResult
+    GetTxKey = GetTxKeyResult
+    GetTxNotes = GetTxNotesResult
+    GetTxProof = GetTxProofResult
+    GetVersion = GetVersionResult
+    ImportKeyImages = ImportKeyImagesResult
+    ImportOutputs = IncomingTransfersResult
+    IncomingTransfers = IncomingTransfersResult
+    LabelAccount = LabelAccountResult
+    LabelAddress = LabelAddressResult
+    MakeIntegratedAddress = MakeIntegratedAddressResult
+    MakeUri = MakeUriResult
+    ParseUri = ParseUriResult
+    QueryKey = QueryKeyResult
+    RelayTx = RelayTxResult
+    RescanBlockchain = RescanBlockchainResult
+    SetAccountTagDescription = SetAccountTagDescriptionResult
+    SetAttribute = SetAttributeResult
+    SetTxNotes = SetTxNotesResult
+    SignedKeyImage = SignedKeyImage
+    Sign = SignResult
+    SignTransfer = SignTransferResult
+    SplitIntegratedAddress = SplitIntegratedAddressResult
+    StopWallet = StopWalletResult
+    Store = StoreResult
+    SubmitTransfer = SubmitTransferResult
+    SweepAll = SweepAllResult
+    SweepDust = SweepDustResult
+    SweepSingle = SweepSingleResult
+    TagAccounts = TagAccountsResult
+    Transfer = TransferResult
+    TransferSplit = TransferSplitResult
+    UntagAccounts = UntagAccountsResult
+    ValidateAddress = ValidateAddressResult
+    Verify = VerifyResult
+    AddAddressBook = AddAddressBookResult
+    EditAddressBook = EditAddressBookResult
+    DeleteAddressBook = DeleteAddressBookResult
+    Refresh = RefreshResult
+    AutoRefresh = AutoRefreshResult
+    RescanSpent = RescanSpentResult

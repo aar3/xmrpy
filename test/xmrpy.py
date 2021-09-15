@@ -19,8 +19,8 @@ import string
 import random
 import pytest
 from xmrpy import WalletClient
-from xmrpy.config import Config, config
-from xmrpy.const import TransferType
+from xmrpy._config import Config, config
+from xmrpy._utils import TransferType
 
 
 test_config = Config(
@@ -38,9 +38,7 @@ class TestUtils:
     @staticmethod
     def random_str(n: int = 10):
         chars = string.ascii_letters + string.digits
-        return "".join(
-            [chars[random.randint(0, len(chars) - 1)] for _ in range(n)]
-        )
+        return "".join([chars[random.randint(0, len(chars) - 1)] for _ in range(n)])
 
 
 class TestWalletClient:
@@ -69,9 +67,7 @@ class TestWalletClient:
 
     @pytest.mark.asyncio
     async def test_rpcmethod__create_address(self):
-        response = await self.client.create_address(
-            account_index=0, label="test"
-        )
+        response = await self.client.create_address(account_index=0, label="test")
         print(response.as_dict())
         assert not response.is_err()
 
@@ -82,9 +78,7 @@ class TestWalletClient:
 
     @pytest.mark.asyncio
     async def test_rpcmethod__label_address(self):
-        response = await self.client.label_address(
-            major_index=0, minor_index=0, label="Foo"
-        )
+        response = await self.client.label_address(major_index=0, minor_index=0, label="Foo")
         print(response.as_dict())
         assert not response.is_err()
 
@@ -156,12 +150,8 @@ class TestWalletClient:
     @pytest.mark.skip(reason="FIXME: Not working")
     async def test_rpcmethod__set_account_tag_description(self):
         account_response = await self.client.create_account("miso-soup")
-        _ = await self.client.tag_accounts(
-            "miso-soup", accounts=[account_response.result.account_index]
-        )
-        response = await self.client.set_account_tag_description(
-            "miso-soup", "Some fake description"
-        )
+        _ = await self.client.tag_accounts("miso-soup", accounts=[account_response.result.account_index])
+        response = await self.client.set_account_tag_description("miso-soup", "Some fake description")
 
         print(response.as_dict())
         assert not response.is_err()
@@ -216,9 +206,7 @@ class TestWalletClient:
     @pytest.mark.skip(reason="Blocked by .transfer()")
     @pytest.mark.asyncio
     async def test_rpcmethod__relay_tx(self):
-        TEST_HEX = (
-            "1c42dcc5672bb09bccf33fb1e9ab4a498af59a6dbd33b3d0cfb289b9e0e25fa5"
-        )
+        TEST_HEX = "1c42dcc5672bb09bccf33fb1e9ab4a498af59a6dbd33b3d0cfb289b9e0e25fa5"
         response = await self.client.relay_tx(TEST_HEX)
         print(response.as_dict())
 
@@ -266,9 +254,7 @@ class TestWalletClient:
     @pytest.mark.asyncio
     async def test_rpcmethod__split_integrated_address(self):
         r = await self.client.make_integrated_address()
-        response = await self.client.split_integrated_address(
-            r.result.integrated_address
-        )
+        response = await self.client.split_integrated_address(r.result.integrated_address)
         print(response.as_dict())
 
         assert not response.is_err()
@@ -385,9 +371,7 @@ class TestWalletClient:
     async def test_rpcmethod__verify(self):
         msg = "attack at dawn"
         sig_response = await self.client.sign(msg)
-        response = await self.client.verify(
-            msg, TEST_ADDR, sig_response.result.signature
-        )
+        response = await self.client.verify(msg, TEST_ADDR, sig_response.result.signature)
 
         assert not response.is_err()
 
@@ -440,6 +424,14 @@ class TestWalletClient:
         print(response.as_dict())
 
         assert isinstance(response.result.uri.address, str)
+
+    @pytest.mark.asyncio
+    async def test_rpcmethod__get_address_book(self):
+        response = await self.client.get_address_book([1])
+        assert not response.is_err()
+
+        print(response.as_dict())
+        assert isinstance(response.result.entries, list)
 
     # ---------
 

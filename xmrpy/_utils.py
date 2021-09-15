@@ -17,7 +17,8 @@
 
 import re
 import json
-from xmrpy.t import Any, Dict, Prim
+import pathlib
+from xmrpy.t import Dict, Prim, Any
 
 
 def is_simple_type(value: Any) -> bool:
@@ -39,7 +40,11 @@ def strip_chars(s: str) -> str:
 
 def config_file_to_config(p: str):
 
-    from xmrpy.config import Config
+    path = pathlib.Path(p)
+    if not path.exists() or not path.is_file() or not p.endswith(".json"):
+        raise ValueError("{} is not a valid configuration file".format(path))
+
+    from xmrpy._config import Config
 
     options = {}
     data = None

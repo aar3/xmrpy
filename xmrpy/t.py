@@ -16,6 +16,8 @@
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # pylint: disable=unused-import
+import enum
+import json
 from typing import (
     Dict,
     List,
@@ -23,6 +25,7 @@ from typing import (
     Type,
     TypeVar,
     NewType,
+    Literal,
     Any,
     Union,
     Optional,
@@ -35,3 +38,72 @@ from typing import (
 T = TypeVar("T")
 
 Prim = Union[bool, int, str]
+
+
+class Headers(Dict[str, str]):
+    pass
+
+
+class TransferType(enum.Enum):
+    all = "all"
+    available = "available"
+    unavailable = "unavailable"
+
+
+class DataClass:
+    def __init__(self, data: Mapping[str, Optional[Any]], **kwargs: Dict[str, Optional[Any]]):
+        if data:
+            if isinstance(data, str):
+                as_dict: Dict[str, Any] = json.loads(data)
+                self._inject_props(as_dict)
+            elif isinstance(data, dict):
+                self._inject_props(data)
+            else:
+                raise TypeError("Illegal DataClass value '{}'".format(type(data)))
+
+        elif kwargs:
+            self._inject_props(kwargs)
+
+    def serialize(self) -> bytes:
+        return json.dumps(self.as_dict()).encode()
+
+    def as_dict(self) -> Dict[str, Prim]:
+        from xmrpy._utils import dump_dict
+
+        return dump_dict(self.__dict__)
+
+    def _inject_props(self, data: Dict[str, Any]):
+        for key, value in data.items():
+            self.__dict__[key] = DataClass(value) if isinstance(value, dict) else value
+
+    def __contains__(self, key: str) -> bool:
+        return key in self.__dict__
+
+    def items(self):
+        return self.__dict__.items()
+
+
+class RpcError(DataClass):
+    code: int
+    message: str
+
+
+class RpcResponse(DataClass, Generic[T]):
+    error: RpcError
+    result: T
+    id: str
+    jsonrpc: str
+
+    def is_err(self) -> bool:
+        return self.__dict__.get("error") is not None
+
+    def err_details(self) -> Optional[str]:
+        if self.is_err():
+            m: str = self.error.message
+            return m
+        return None
+
+    def as_dict(self) -> Dict[str, Prim]:
+        from xmrpy._utils import dump_dict
+
+        return dump_dict(self.__dict__)

@@ -3,5 +3,10 @@ __pycache__/
 venv/
 .DS_Store
 .envrc
-*.log*
+monero-wallet-rpc.log*
 docs/NOTES.md
+.coverage
+aliases.rc
+.vscode/
+.mypy_cache/
+.pytest_cache/

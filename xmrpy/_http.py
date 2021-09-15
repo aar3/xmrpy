@@ -17,11 +17,7 @@
 
 import json
 import httpx
-from xmrpy.t import Optional, Dict, Any
-
-
-class Headers(Dict[str, str]):
-    pass
+from xmrpy.t import Optional, Dict, Any, Callable, RpcError, Headers, RpcResponse
 
 
 class HttpClient:
@@ -30,23 +26,28 @@ class HttpClient:
         self._httpx = httpx.AsyncClient(timeout=timeout)
         self._auth: httpx.DigestAuth
 
-    def _handle_response(self, response: httpx.Response):
-        if response.status_code != 200:
-            return {
-                "result": None,
-                "error": {
-                    "code": response.status_code,
-                    "message": response.text,
-                },
-                "id": "0",
-                "jsonrpc": "2.0",
-            }
-        return response.json()
-
-    async def post(self, url: str, data: Optional[Dict[str, Any]]):
+    async def post(
+        self,
+        url: str,
+        data: Optional[Dict[str, Any]] = None,
+        ResultClass: Any = Callable[[Any], Any],
+    ):
         compact = json.dumps(data)
         response = await self._httpx.post(url, headers=self._headers, content=compact, auth=self._auth)  # type: ignore
-        return self._handle_response(response)
+        if response.status_code != 200:
+            return RpcResponse(
+                {
+                    "result": None,
+                    "error": RpcError({"code": response.status_code, "message": response.text}),
+                    "id": "0",
+                    "jsonrpc": "2.0",
+                }
+            )
+
+        rjson = response.json()
+        if not "error" in rjson:
+            rjson.update({"result": ResultClass(rjson["result"]), "error": None})
+        return RpcResponse(rjson)
 
     def set_digest_auth(self, user: str, passwd: str):
         self._auth = httpx.DigestAuth(user, passwd)

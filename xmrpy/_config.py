@@ -17,7 +17,7 @@
 
 import os
 from xmrpy.t import Dict
-from xmrpy.utils import config_file_to_config
+from xmrpy._utils import config_file_to_config
 
 
 class Config:
