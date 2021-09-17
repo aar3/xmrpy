@@ -5,9 +5,6 @@ setup(
     description="Python impelementation of Monero wallet JSON RPC client library",
     author="Rashad Alston <aar3>",
     author_email="rashad.a.alston@gmail.com",
-    data_files=[("xmrpy", ["xmrpy.json"])],
     url="https://github.com/aar3/xmrpy",
     packages=["distutils", "distutils.command"],
 )
-
-# TODO: FINISH

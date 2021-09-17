@@ -417,18 +417,105 @@ class RescanSpentResult(DataClass):
     pass
 
 
+class StartMiningResult(DataClass):
+    pass
+
+
+class StopMiningResult(DataClass):
+    pass
+
+
+class CreateWalletResult(DataClass):
+    pass
+
+
+class GenerateFromKeysResult(DataClass):
+    address: str
+    info: str
+
+
+class OpenWalletResult(DataClass):
+    pass
+
+
+class RestoreDeterministicWalletResult(DataClass):
+    address: str
+    info: str
+    seed: str
+    was_deprecated: bool
+
+
+class CloseWalletResult(DataClass):
+    pass
+
+
+class ChangeWalletPasswordResult(DataClass):
+    pass
+
+
+class IsMultisigResult(DataClass):
+    multisig: bool
+    ready: bool
+    threshold: int
+    total: int
+
+
+class PrepareMultisigResult(DataClass):
+    multisig_info: str
+
+
+class MakeMultisigResult(DataClass):
+    pass
+
+
+class ExportMultisigInfoResult(DataClass):
+    info: str
+
+
+class ImportMultisigInfoResult(DataClass):
+    n_outputs: int
+
+
+class MultisigInfoResult(DataClass):
+    address: str
+
+
+class FinalizeMultisigResult(DataClass):
+    address: str
+    multisig_info: str
+
+
+class SignMultisigResult(DataClass):
+    tx_data_hex: str
+    tx_hash_list: List[str]
+
+
+class SubmitMultisigResult(DataClass):
+    tx_hash_list: str
+
+
 class Result(enum.Enum):
+    AddAddressBook = AddAddressBookResult
+    AutoRefresh = AutoRefreshResult
+    ChangeWalletPassword = ChangeWalletPasswordResult
     CheckReserveProof = CheckReserveProofResult
     CheckSpendProof = CheckSpendProofResult
     CheckTxKey = CheckTxKeyResult
-    GetAddressBook = GetAddressBookResult
     CheckTxProof = CheckTxProofResult
+    CloseWallet = CloseWalletResult
     CreateAccount = CreateAccountResult
     CreateAddress = CreateAddressResult
+    CreateWallet = CreateWalletResult
+    DeleteAddressBook = DeleteAddressBookResult
+    EditAddressBook = EditAddressBookResult
     ExportKeyImages = ExportKeyImagesResult
+    ExportMultisigInfo = ExportMultisigInfoResult
     ExportOutputs = GetAccountsResult
+    FinalizeMultisig = FinalizeMultisigResult
+    GenerateFromKeys = GenerateFromKeysResult
     GetAccounts = GetAccountsResult
     GetAccountTags = GetAccountTagsResult
+    GetAddressBook = GetAddressBookResult
     GetAddressIndex = GetAddressIndexResult
     GetAttribute = GetAttributeResult
     GetBalance = GetBalanceResult
@@ -445,25 +532,38 @@ class Result(enum.Enum):
     GetTxProof = GetTxProofResult
     GetVersion = GetVersionResult
     ImportKeyImages = ImportKeyImagesResult
+    ImportMultisigInfo = ImportMultisigInfoResult
     ImportOutputs = IncomingTransfersResult
     IncomingTransfers = IncomingTransfersResult
+    IsMultisig = IsMultisigResult
     LabelAccount = LabelAccountResult
     LabelAddress = LabelAddressResult
     MakeIntegratedAddress = MakeIntegratedAddressResult
+    MakeMultisig = MakeMultisigResult
     MakeUri = MakeUriResult
+    MultisigInfo = MultisigInfoResult
+    OpenWallet = OpenWalletResult
     ParseUri = ParseUriResult
+    PrepareMultisig = PrepareMultisigResult
     QueryKey = QueryKeyResult
+    Refresh = RefreshResult
     RelayTx = RelayTxResult
     RescanBlockchain = RescanBlockchainResult
+    RescanSpent = RescanSpentResult
+    RestoreDeterministicWallet = RestoreDeterministicWalletResult
     SetAccountTagDescription = SetAccountTagDescriptionResult
     SetAttribute = SetAttributeResult
     SetTxNotes = SetTxNotesResult
-    SignedKeyImage = SignedKeyImage
     Sign = SignResult
+    SignedKeyImage = SignedKeyImage
+    SignMultisig = SignMultisigResult
     SignTransfer = SignTransferResult
     SplitIntegratedAddress = SplitIntegratedAddressResult
+    StartMining = StartMiningResult
+    StopMining = StopMiningResult
     StopWallet = StopWalletResult
     Store = StoreResult
+    SubmitMultisig = SubmitMultisigResult
     SubmitTransfer = SubmitTransferResult
     SweepAll = SweepAllResult
     SweepDust = SweepDustResult
@@ -474,9 +574,3 @@ class Result(enum.Enum):
     UntagAccounts = UntagAccountsResult
     ValidateAddress = ValidateAddressResult
     Verify = VerifyResult
-    AddAddressBook = AddAddressBookResult
-    EditAddressBook = EditAddressBookResult
-    DeleteAddressBook = DeleteAddressBookResult
-    Refresh = RefreshResult
-    AutoRefresh = AutoRefreshResult
-    RescanSpent = RescanSpentResult

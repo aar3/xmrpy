@@ -25,15 +25,12 @@ from xmrpy._result import *
 class Client:
     def __init__(self, conf: Optional[Config] = None, headers: Optional[Headers] = None):
         self._config = conf or config
-        self._http = HttpClient(headers, timeout=self._config.HTTP_READ_TIMEOUT)
+        self._http = HttpClient(headers, timeout=int(self._config.HTTP_READ_TIMEOUT))
         self.url = urlparse("http://" + self._config.WALLET_RPC_ADDR + "/json_rpc")
 
     def auth(self):
         self._http.set_digest_auth(self._config.DIGEST_USER_NAME, self._config.DIGEST_USER_PASSWD)
         return self
-
-    async def get_languages(self) -> RpcResponse[Result]:
-        return await self._send({"method": "get_languages"}, Result.GetLanguages)
 
     async def get_balance(self, account_index: int = 0, address_indices: List[int] = [0]) -> RpcResponse[Result]:
         return await self._send(
@@ -355,7 +352,10 @@ class Client:
         return await self._send({"method": "store"}, Result.Store)
 
     async def get_payments(self, payment_id: str) -> RpcResponse[Result]:
-        return await self._send({"method": "get_payments", "params": {"payment_id": payment_id}}, Result.GetPayments)
+        return await self._send(
+            {"method": "get_payments", "params": {"payment_id": payment_id}},
+            Result.GetPayments,
+        )
 
     async def get_bulk_payments(self, payment_ids: List[str], min_block_height: int) -> RpcResponse[Result]:
         return await self._send(
@@ -388,7 +388,10 @@ class Client:
         )
 
     async def query_key(self, key_type: str) -> RpcResponse[Result]:
-        return await self._send({"method": "query_key", "params": {"key_type": key_type}}, Result.QueryKey)
+        return await self._send(
+            {"method": "query_key", "params": {"key_type": key_type}},
+            Result.QueryKey,
+        )
 
     async def make_integrated_address(
         self,
@@ -418,9 +421,7 @@ class Client:
     async def stop_wallet(self) -> RpcResponse[Result]:
         return await self._send({"method": "stop_wallet"}, Result.StopWallet)
 
-    async def rescan_blockchain(
-        self,
-    ) -> RpcResponse[Result]:
+    async def rescan_blockchain(self) -> RpcResponse[Result]:
         return await self._send({"method": "rescan_blockchain"}, Result.RescanBlockchain)
 
     async def set_tx_notes(self, txids: List[str], notes: List[str]) -> RpcResponse[Result]:
@@ -433,15 +434,22 @@ class Client:
         )
 
     async def get_tx_notes(self, txids: List[str]) -> RpcResponse[Result]:
-        return await self._send({"method": "get_tx_notes", "params": {"txids": txids}}, Result.GetTxNotes)
+        return await self._send(
+            {"method": "get_tx_notes", "params": {"txids": txids}},
+            Result.GetTxNotes,
+        )
 
     async def set_attribute(self, key: str, value: str) -> RpcResponse[Result]:
         return await self._send(
-            {"method": "set_attribute", "params": {"key": key, "value": value}}, Result.SetAttribute
+            {"method": "set_attribute", "params": {"key": key, "value": value}},
+            Result.SetAttribute,
         )
 
     async def get_attribute(self, key: str) -> RpcResponse[Result]:
-        return await self._send({"method": "get_attribute", "params": {"key": key}}, Result.GetAttribute)
+        return await self._send(
+            {"method": "get_attribute", "params": {"key": key}},
+            Result.GetAttribute,
+        )
 
     async def get_tx_key(self, txid: str) -> RpcResponse[Result]:
         return await self._send({"method": "get_tx_key", "params": {"txid": txid}}, Result.GetTxKey)
@@ -695,7 +703,10 @@ class Client:
         )
 
     async def refresh(self, start_height: int) -> RpcResponse[Result]:
-        return await self._send({"method": "refresh", "params": {"start_height": start_height}}, Result.Refresh)
+        return await self._send(
+            {"method": "refresh", "params": {"start_height": start_height}},
+            Result.Refresh,
+        )
 
     async def auto_refresh(self, enable: bool = True) -> RpcResponse[Result]:
         return await self._send(
@@ -709,7 +720,176 @@ class Client:
     async def rescan_spent(self) -> RpcResponse[Result]:
         return await self._send({"method": "rescan_spent"}, Result.RescanSpent)
 
-    # ---<
+    async def start_mining(
+        self,
+        threads_count: int,
+        do_background_mining: bool,
+        ignore_battery: bool,
+    ) -> RpcResponse[Result]:
+        return await self._send(
+            {
+                "method": "start_mining",
+                "params": {
+                    "threads_count": threads_count,
+                    "do_background_mining": do_background_mining,
+                    "ignore_battery": ignore_battery,
+                },
+            },
+            Result.StartMining,
+        )
+
+    async def stop_mining(self) -> RpcResponse[Result]:
+        return await self._send({"method": "stop_mining"}, Result.StopMining)
+
+    async def get_languages(self) -> RpcResponse[Result]:
+        return await self._send({"method": "get_languages"}, Result.GetLanguages)
+
+    async def create_wallet(self, filename: str, password: str, language: str) -> RpcResponse[Result]:
+        return await self._send(
+            {
+                "method": "create_wallet",
+                "params": {
+                    "filename": filename,
+                    "password": password,
+                    "language": language,
+                },
+            },
+            Result.CreateWallet,
+        )
+
+    async def generate_from_keys(
+        self,
+        filename: str,
+        address: str,
+        viewkey: str,
+        password: str,
+        autosave_current: bool = True,
+        spendkey: Optional[str] = None,
+        restore_height: int = 0,
+    ) -> RpcResponse[Result]:
+        return await self._send(
+            {
+                "method": "generate_from_keys",
+                "params": {
+                    "filename": filename,
+                    "address": address,
+                    "viewkey": viewkey,
+                    "password": password,
+                    "autosave_current": autosave_current,
+                    "spendkey": spendkey,
+                    "restore_height": restore_height,
+                },
+            },
+            Result.GenerateFromKeys,
+        )
+
+    async def open_wallet(self, filename: str, password: str) -> RpcResponse[Result]:
+        return await self._send(
+            {
+                "method": "open_wallet",
+                "params": {"filename": filename, "password": password},
+            },
+            Result.OpenWallet,
+        )
+
+    async def restore_deterministic_wallet(
+        self,
+        name: str,
+        password: str,
+        seed: str,
+        restore_height: int = 0,
+        language: Optional[str] = None,
+        seed_offset: Optional[str] = None,
+        autosave_current: bool = True,
+    ) -> RpcResponse[Result]:
+        return await self._send(
+            {
+                "method": "restore_deterministic_wallet",
+                "params": {
+                    "name": name,
+                    "password": password,
+                    "seed": seed,
+                    "restore_height": restore_height,
+                    "language": language,
+                    "seed_offset": seed_offset,
+                    "autosave_current": autosave_current,
+                },
+            },
+            Result.RestoreDeterministicWallet,
+        )
+
+    async def close_wallet(self) -> RpcResponse[Result]:
+        return await self._send({"method": "close_wallet"}, Result.CloseWallet)
+
+    async def change_wallet_password(self, old_password: str, new_password: str) -> RpcResponse[Result]:
+        return await self._send(
+            {
+                "method": "change_wallet_password",
+                "params": {
+                    "old_password": old_password,
+                    "new_password": new_password,
+                },
+            },
+            Result.ChangeWalletPassword,
+        )
+
+    async def is_multisig(self) -> RpcResponse[Result]:
+        return await self._send({"method": "is_multisig"}, Result.IsMultisig)
+
+    async def prepare_multisig(self) -> RpcResponse[Result]:
+        return await self._send({"method": "prepare_multisig"}, Result.PrepareMultisig)
+
+    async def make_multisig(self, multisig_info: List[str], threshold: int, password: str) -> RpcResponse[Result]:
+        return await self._send(
+            {
+                "method": "make_multisig",
+                "params": {
+                    "multisig_info": multisig_info,
+                    "threshold": threshold,
+                    "password": password,
+                },
+            },
+            Result.MakeMultisig,
+        )
+
+    async def export_multisig_info(self, info: str) -> RpcResponse[Result]:
+        return await self._send(
+            {"method": "export_multisig_info", "params": {"info": info}},
+            Result.ExportMultisigInfo,
+        )
+
+    async def import_multisig_info(self, info: List[str]) -> RpcResponse[Result]:
+        return await self._send(
+            {"method": "import_multisig_info", "params": {"info": info}},
+            Result.ImportMultisigInfo,
+        )
+
+    async def finalize_multisig(self, multisig_info: List[str], password: str) -> RpcResponse[Result]:
+        return await self._send(
+            {
+                "method": "finalize_multisig",
+                "params": {
+                    "multisig_info": multisig_info,
+                    "password": password,
+                },
+            },
+            Result.FinalizeMultisig,
+        )
+
+    async def sign_multisig(self, tx_data_hex: str) -> RpcResponse[Result]:
+        return await self._send(
+            {"method": "sign_multisig", "params": {"tx_data_hex": tx_data_hex}},
+            Result.SignMultisig,
+        )
+
+    async def submit_multisig(self, tx_data_hex: str) -> RpcResponse[Result]:
+        return await self._send(
+            {
+                "method": "submit_multisig",
+                "params": {"tx_data_hex": tx_data_hex},
+            },
+            Result.SubmitMultisig,
+        )
 
     async def get_version(self) -> RpcResponse[Result]:
         return await self._send({"method": "get_version"}, Result.GetVersion)

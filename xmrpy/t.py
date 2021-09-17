@@ -20,20 +20,17 @@ import enum
 import json
 from typing import (
     Dict,
-    List,
-    Tuple,
-    Type,
     TypeVar,
-    NewType,
-    Literal,
     Any,
     Union,
-    Optional,
     Callable,
+    Optional,
+    List,
     Mapping,
     Generic,
 )
 
+__all__ = ["Headers", "TransferType"]
 
 T = TypeVar("T")
 

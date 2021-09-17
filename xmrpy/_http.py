@@ -17,7 +17,16 @@
 
 import json
 import httpx
-from xmrpy.t import Optional, Dict, Any, Callable, RpcError, Headers, RpcResponse
+from xmrpy.t import (
+    Optional,
+    Dict,
+    Any,
+    Callable,
+    RpcError,
+    Callable,
+    Headers,
+    RpcResponse,
+)
 
 
 class HttpClient:

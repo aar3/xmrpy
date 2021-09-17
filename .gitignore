@@ -1,6 +1,6 @@
 *.pyc
 __pycache__/
-venv/
+**/venv/
 .DS_Store
 .envrc
 monero-wallet-rpc.log*
@@ -10,3 +10,4 @@ aliases.rc
 .vscode/
 .mypy_cache/
 .pytest_cache/
+.coverage

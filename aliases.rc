@@ -16,3 +16,4 @@
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 alias test-only="python -m pytest -s -v $1"
+alias format-only="python -m black -l 120 $1"

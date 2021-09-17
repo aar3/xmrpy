@@ -16,9 +16,8 @@
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import re
-import json
 import pathlib
-from xmrpy.t import Dict, Prim, Any
+from xmrpy.t import Dict, Prim, Any, List
 
 
 def is_simple_type(value: Any) -> bool:
@@ -41,24 +40,26 @@ def strip_chars(s: str) -> str:
 def config_file_to_config(p: str):
 
     path = pathlib.Path(p)
-    if not path.exists() or not path.is_file() or not p.endswith(".json"):
+    if not path.exists() or not path.is_file() or not p.endswith(".conf"):
         raise ValueError("{} is not a valid configuration file".format(path))
 
     from xmrpy._config import Config
 
-    options = {}
-    data = None
+    def process_lines(lines: List[str]) -> Dict[str, str]:
+        r: Dict[str, str] = {}
+        for line in lines:
+            opt, value = line.split("=")
+            opt = strip_chars(opt)
+            value = strip_chars(value)
+            r[opt] = value
+        return r
+
+    options = None
     with open(p, "r") as file:
-        data = json.load(file)
+        lines = file.readlines()
+        options = process_lines(lines)
 
-    for optname, item in data.items():
-        if isinstance(item, dict):
-            for key, value in item.items():
-                options[key.upper()] = value
-        else:
-            options[optname.upper()] = item
-
-    return Config(**options)
+    return Config(options)
 
 
 def dump_dict(data: Dict[str, Any]) -> Dict[str, Prim]:

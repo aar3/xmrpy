@@ -16,7 +16,7 @@
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import os
-from xmrpy.t import Dict
+from xmrpy.t import Mapping, Dict
 from xmrpy._utils import config_file_to_config
 
 
@@ -28,11 +28,11 @@ class Config:
     DIGEST_USER_NAME: str
     DIGEST_USER_PASSWD: str
 
-    HTTP_READ_TIMEOUT: int = 10
+    HTTP_READ_TIMEOUT: str = "10"
 
-    def __init__(self, **kwargs: Dict[str, str]):
-        self.__dict__.update(kwargs)
+    def __init__(self, data: Dict[str, str]):
+        self.__dict__.update(data)
 
 
-p = os.path.join(os.path.dirname(os.path.relpath(__file__)), "xmrpy.json")
+p = os.path.join(os.path.dirname(os.path.relpath(__file__)), "xmrpy.conf")
 config = config_file_to_config(p)

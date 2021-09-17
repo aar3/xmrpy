@@ -18,7 +18,7 @@
 import string
 import random
 import pytest
-from xmrpy import WalletClient
+from xmrpy import Wallet
 from xmrpy._config import Config, config
 from xmrpy._utils import TransferType
 
@@ -41,11 +41,11 @@ class TestUtils:
         return "".join([chars[random.randint(0, len(chars) - 1)] for _ in range(n)])
 
 
-class TestWalletClient:
+class TestWallet:
     def setup(self):
         headers = {"Content-Type": "application/json"}
         # pylint: disable=attribute-defined-outside-init
-        self.client = WalletClient(config, headers=headers).auth()
+        self.client = Wallet(config, headers=headers).auth()
 
     @pytest.mark.asyncio
     async def test_rpcmethod__get_languages(self):
