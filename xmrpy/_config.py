@@ -16,8 +16,8 @@
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import os
-from xmrpy.t import Mapping, Dict
-from xmrpy._utils import config_file_to_config
+from xmrpy.t import Dict
+from xmrpy._utils import config_file_to_config, derive_loglevel
 
 
 class Config:
@@ -29,6 +29,9 @@ class Config:
     DIGEST_USER_PASSWD: str
 
     HTTP_READ_TIMEOUT: str = "10"
+
+    LOG_LEVEL = derive_loglevel("DEBUG")
+    LOG_FILE = "xmrpy.log"
 
     def __init__(self, data: Dict[str, str]):
         self.__dict__.update(data)

@@ -15,13 +15,22 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from xmrpy._wallet import Client as Wallet
+import logging
 from xmrpy._config import Config
-from xmrpy._logger import logger
+
+LOG_FORMAT = "[%(asctime)s] %(levelname)s PID:%(process)s %(module)s L%(lineno)s - %(message)s"
+
+logging.basicConfig(
+    level=Config.LOG_LEVEL,
+    filename=Config.LOG_FILE,
+    format=LOG_FORMAT,
+    datefmt="%Y/%m/%d %H:%M:%S",
+)
 
 
-__all__ = [
-    "Wallet",
-    "Config",
-    "logger",
-]
+console = logging.StreamHandler()
+console.setLevel(Config.LOG_LEVEL)
+console.setFormatter(logging.Formatter(LOG_FORMAT))
+
+logger = logging.getLogger("xmrpy")
+logger.addHandler(console)

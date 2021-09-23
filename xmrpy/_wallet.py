@@ -19,6 +19,7 @@ from urllib.parse import urlparse
 from xmrpy.t import Dict, List, Optional, Any, TransferType
 from xmrpy._http import HttpClient, Headers, RpcResponse
 from xmrpy._config import Config, config
+from xmrpy._logger import logger
 from xmrpy._result import *
 
 
@@ -893,6 +894,58 @@ class Client:
 
     async def get_version(self) -> RpcResponse[Result]:
         return await self._send({"method": "get_version"}, Result.GetVersion)
+
+    async def transfer_sign_submit(self, **kwargs):
+        """
+        Custom RPC method intended to simplify the steps of sending a transfer
+        """
+        destinations = kwargs.get("destinations")
+        account_index = kwargs.get("account_index")
+        subaddress_indices = kwargs.get("subaddress_indices")
+        priority = kwargs.get("priority")
+        mixin = kwargs.get("mixin")
+        ring_size = kwargs.get("ring_size")
+        unlock_time = kwargs.get("unlock_time")
+        get_tx_key = kwargs.get("get_tx_key")
+        do_not_relay = kwargs.get("do_not_relay")
+        get_tx_hex = kwargs.get("get_tx_hex")
+        get_tx_metadata = kwargs.get("get_tx_metadata")
+
+        result = await self.transfer(
+            destinations,
+            account_index,
+            subaddress_indices,
+            priority,
+            mixin,
+            ring_size,
+            unlock_time,
+            get_tx_key,
+            do_not_relay,
+            get_tx_hex,
+            get_tx_metadata,
+        )
+
+        if result.is_err():
+            logger.error(".transfer() failed with: %s (%s)", result.error.message, result.error.code)
+            return result
+
+        unsigned_txset = kwargs.get("unsigned_txset")
+        export_raw = kwargs.get("export_raw")
+
+        result = await self.sign_transfer(unsigned_txset, export_raw)
+
+        if result.is_err():
+            logger.error(".sign_transfer() failed with: %s (%s)", result.error.message, result.error.code)
+            return result
+
+        tx_data_hex = kwargs.get("tx_data_hex")
+        result = await self.submit_transfer(tx_data_hex)
+
+        if result.is_err():
+            logger.error(".submit_transfer() failed with: %s (%s)", result.error.message, result.error.code)
+            return result
+
+        return result
 
     async def _send(self, args: Dict[str, Any], ResultClass: Result) -> RpcResponse[Result]:
         data = Client._attach_default_params(args)

@@ -23,7 +23,6 @@ from xmrpy.t import (
     Any,
     Callable,
     RpcError,
-    Callable,
     Headers,
     RpcResponse,
 )

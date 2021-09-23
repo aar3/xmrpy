@@ -11,3 +11,4 @@ aliases.rc
 .mypy_cache/
 .pytest_cache/
 .coverage
+seed.txt

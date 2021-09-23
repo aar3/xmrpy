@@ -17,9 +17,7 @@ async def transfer(request):
     account_index = request.data["account_index"]
     subaddress_indices = request.data["subaddress_indices"]
 
-    r = await wallet.transfer(destinations, account_index, subaddress_indices)
-    r = await wallet.sign_transfer(r.result.unsigned_txset)
-    r = await wallet.submit_transfer(r.result.tx_data_hex)
+    r = await wallet.transfer_sign_submit(destinations, account_index, subaddress_indices)
 
     return response(data={"tx_hash_list": r.result.tx_hash_list})
 

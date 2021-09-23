@@ -20,6 +20,22 @@ import pathlib
 from xmrpy.t import Dict, Prim, Any, List
 
 
+def derive_loglevel(level: str):
+    import logging
+
+    level = level.upper()
+    if level == "DEBUG":
+        return logging.DEBUG
+    if level == "INFO":
+        return logging.INFO
+    if level == "WARN":
+        return logging.WARN
+    if level == "ERROR":
+        return logging.ERROR
+
+    raise ValueError("Unrecognized log level: {}.".format(level))
+
+
 def is_simple_type(value: Any) -> bool:
     return any(
         [
@@ -40,7 +56,12 @@ def strip_chars(s: str) -> str:
 def config_file_to_config(p: str):
 
     path = pathlib.Path(p)
-    if not path.exists() or not path.is_file() or not p.endswith(".conf"):
+
+    if not path.exists():
+        # No configuration file, user can use their own Config class
+        pass
+
+    if path.exists() and (not path.is_file() or not p.endswith(".conf")):
         raise ValueError("{} is not a valid configuration file".format(path))
 
     from xmrpy._config import Config
