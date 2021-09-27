@@ -12,3 +12,4 @@ aliases.rc
 .pytest_cache/
 .coverage
 seed.txt
+*.log

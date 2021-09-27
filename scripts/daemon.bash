@@ -18,10 +18,9 @@
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 monerod \
-	--rpc-login=$USER:$PASSWORD \
-	--p2p-bind-ip=0.0.0.0 \
-	--p2p-bind-port=18080 \
-	--rpc-bind-ip=127.0.0.1 \
-	--rpc-bind-port=18081 \
-	--log-level=4
-
+	--rpc-logip $USER:$PASSWORD \
+	--p2p-bind-ip 0.0.0.0 \
+	--p2p-bind-port 18080 \
+	--rpc-bind-ip= 27.0.0.1 \
+	--rpc-bind-port 18081 \
+	--log-level 2

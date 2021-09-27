@@ -16,20 +16,20 @@
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import logging
-from xmrpy._config import Config
+from xmrpy._config import config
 
 LOG_FORMAT = "[%(asctime)s] %(levelname)s PID:%(process)s %(module)s L%(lineno)s - %(message)s"
 
 logging.basicConfig(
-    level=Config.LOG_LEVEL,
-    filename=Config.LOG_FILE,
+    level=config.LOG_LEVEL,
+    filename=config.LOG_FILE,
     format=LOG_FORMAT,
     datefmt="%Y/%m/%d %H:%M:%S",
 )
 
 
 console = logging.StreamHandler()
-console.setLevel(Config.LOG_LEVEL)
+console.setLevel(config.LOG_LEVEL)
 console.setFormatter(logging.Formatter(LOG_FORMAT))
 
 logger = logging.getLogger("xmrpy")

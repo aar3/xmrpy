@@ -11,15 +11,20 @@ Based on the JSON RPC API available at https://www.getmonero.org/resources/devel
 ![GitHub issues](https://img.shields.io/github/issues/aar3/xmrpy)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/aar3/xmrpy)
 
+![Travis (.com)](https://img.shields.io/travis/com/aar3/xmrpy)
+
 <hr/>
 
 ## Dependencies
 
 #### Full Monero node
 - https://sethforprivacy.com/guides/run-a-monero-node/
-- `USER=monero-node-user PASSWORd=password scripts/daemon.bash`
 
-#### Monero wallet
+#### Monero Daemon RPC
+- https://www.monero.how/how-to-run-monero-node
+- `USER=ralston PASSWORD=password bash scripts/daemon.bash`
+
+#### Monero Wallet RPC
 - https://www.getmonero.org/downloads/
 - `XMR_DIR=/path/to/xmr/root/dir USER=user PASSWORD=password scripts/wallet-rpc.bash`
 
@@ -47,7 +52,7 @@ Based on the JSON RPC API available at https://www.getmonero.org/resources/devel
 | ✅ | ✅ | untag_accounts |
 | ✅ | ✅ | set_account_tag_description |
 | ✅ | ✅ | get_height |
-| ✅ | 🚫 | transfer |
+| ✅ | ✅ | transfer |
 | ✅ | 🚫 | transfer_split |
 | ✅ | 🚫 | sign_transfer |
 | ✅ | 🚫 | submit_transfer |

@@ -16,7 +16,6 @@
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import os
-from xmrpy.t import Dict
 from xmrpy._utils import config_file_to_config, derive_loglevel
 
 
@@ -26,16 +25,16 @@ class Config:
     WALLET_RPC_ADDR: str = "127.0.0.1:18083"
 
     DIGEST_USER_NAME: str
-    DIGEST_USER_PASSWD: str
+    DIGEST_USER_PASSWORD: str
 
     HTTP_READ_TIMEOUT: str = "10"
 
     LOG_LEVEL = derive_loglevel("DEBUG")
     LOG_FILE = "xmrpy.log"
 
-    def __init__(self, data: Dict[str, str]):
-        self.__dict__.update(data)
+    def __init__(self, **kwargs):
+        self.__dict__.update(**kwargs)
 
 
-p = os.path.join(os.path.dirname(os.path.relpath(__file__)), "xmrpy.conf")
+p = os.path.join(os.path.dirname(os.path.dirname(os.path.relpath(__file__))), "xmrpy.conf")
 config = config_file_to_config(p)

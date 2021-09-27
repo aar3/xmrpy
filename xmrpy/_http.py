@@ -17,6 +17,7 @@
 
 import json
 import httpx
+from xmrpy._logger import logger
 from xmrpy.t import (
     Optional,
     Dict,
@@ -40,9 +41,11 @@ class HttpClient:
         data: Optional[Dict[str, Any]] = None,
         ResultClass: Any = Callable[[Any], Any],
     ):
+        logger.info("POST - %s", url)
         compact = json.dumps(data)
         response = await self._httpx.post(url, headers=self._headers, content=compact, auth=self._auth)  # type: ignore
         if response.status_code != 200:
+            logger.error("Non-200[%s] returned via error: %s", response.status_code, response.text)
             return RpcResponse(
                 {
                     "result": None,

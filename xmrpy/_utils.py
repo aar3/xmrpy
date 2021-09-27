@@ -50,7 +50,8 @@ def is_simple_type(value: Any) -> bool:
 
 
 def strip_chars(s: str) -> str:
-    return re.sub(r"[^A-Za-z0-9:._ ]+", "", s)
+    s = s.strip()
+    return re.sub(r"[^A-Za-z0-9:._\s]+", "", s)
 
 
 def config_file_to_config(p: str):
@@ -69,6 +70,9 @@ def config_file_to_config(p: str):
     def process_lines(lines: List[str]) -> Dict[str, str]:
         r: Dict[str, str] = {}
         for line in lines:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
             opt, value = line.split("=")
             opt = strip_chars(opt)
             value = strip_chars(value)
@@ -80,7 +84,7 @@ def config_file_to_config(p: str):
         lines = file.readlines()
         options = process_lines(lines)
 
-    return Config(options)
+    return Config(**options)
 
 
 def dump_dict(data: Dict[str, Any]) -> Dict[str, Prim]:

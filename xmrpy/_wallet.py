@@ -30,7 +30,7 @@ class Client:
         self.url = urlparse("http://" + self._config.WALLET_RPC_ADDR + "/json_rpc")
 
     def auth(self):
-        self._http.set_digest_auth(self._config.DIGEST_USER_NAME, self._config.DIGEST_USER_PASSWD)
+        self._http.set_digest_auth(self._config.DIGEST_USER_NAME, self._config.DIGEST_USER_PASSWORD)
         return self
 
     async def get_balance(self, account_index: int = 0, address_indices: List[int] = [0]) -> RpcResponse[Result]:
@@ -165,7 +165,7 @@ class Client:
         self,
         destinations: List[Dict[str, int]],
         account_index: int = 0,
-        subaddress_indices: List[int] = [],
+        subaddr_indices: Optional[List[int]] = None,
         priority: int = 0,
         mixin: int = 0,
         ring_size: int = 7,
@@ -181,7 +181,7 @@ class Client:
                 "params": {
                     "destinations": destinations,
                     "account_index": account_index,
-                    "subaddress_indices": subaddress_indices,
+                    "subaddr_indices": subaddr_indices,
                     "priority": priority,
                     "mixin": mixin,
                     "ring_size": ring_size,
@@ -911,19 +911,26 @@ class Client:
         get_tx_hex = kwargs.get("get_tx_hex")
         get_tx_metadata = kwargs.get("get_tx_metadata")
 
-        result = await self.transfer(
-            destinations,
-            account_index,
-            subaddress_indices,
-            priority,
-            mixin,
-            ring_size,
-            unlock_time,
-            get_tx_key,
-            do_not_relay,
-            get_tx_hex,
-            get_tx_metadata,
+        args = tuple(
+            filter(
+                None,
+                (
+                    destinations,
+                    account_index,
+                    subaddress_indices,
+                    priority,
+                    mixin,
+                    ring_size,
+                    unlock_time,
+                    get_tx_key,
+                    do_not_relay,
+                    get_tx_hex,
+                    get_tx_metadata,
+                ),
+            )
         )
+
+        result = await self.transfer(*args)
 
         if result.is_err():
             logger.error(".transfer() failed with: %s (%s)", result.error.message, result.error.code)

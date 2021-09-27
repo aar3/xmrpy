@@ -23,8 +23,8 @@ monero-wallet-rpc \
 	--rpc-login $USER:$PASSWORD \
 	--rpc-bind-ip 127.0.0.1 \
 	--rpc-bind-port 18083 \
-	--wallet-file $XMR_DIR/xmrpy.keys \
+	--wallet-file $WALLET_FILE \
 	--prompt-for-password \
 	--trusted-daemon \
-	--log-level 4
+	--log-level 1
 
