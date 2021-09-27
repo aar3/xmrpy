@@ -19,7 +19,7 @@ from xmrpy._wallet import Client as Wallet
 from xmrpy._config import Config
 from xmrpy._logger import logger
 
-atomic_unit_multiplier = 1000000000000
+atomic_unit_multiplier = 10e11
 
 
 __all__ = [

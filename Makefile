@@ -20,9 +20,9 @@ SOURCE = .
 PWD = $(shell pwd)
 REQUIREMENTS_DIR = $(PWD)/requirements
 PYTHON = $(PWD)/venv/bin/python
-PIP = /usr/local/bin/pipenv
+PIP = $(which pipenv)
 
-CMD_PIP_INSTALL_LOCK = $(PIP) install --ignore-pipfile
+CMD_PIP_INSTALL_LOCK = $(PIP) sync
 CMD_PIP_INSTALL = $(PIP) install
 CMD_PIP_FREEZE = $(PIP) lock --requirements
 

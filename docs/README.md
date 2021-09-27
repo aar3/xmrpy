@@ -6,7 +6,7 @@ Based on the JSON RPC API available at https://www.getmonero.org/resources/devel
 [A list of community run, publicly accessibly Monero nodes](https://monero.fail/)
 
 ![GitHub Pipenv locked dependency version](https://img.shields.io/github/pipenv/locked/dependency-version/aar3/xmrpy/httpx)
-![GitHub Pipenv locked dependency version](https://img.shields.io/github/pipenv/locked/dependency-version/aar3/xmrpy/pytest)
+![GitHub Pipenv locked dependency version](https://img.shields.io/github/pipenv/locked/dependency-version/aar3/xmrpy/dev/pytest)
 
 ![GitHub issues](https://img.shields.io/github/issues/aar3/xmrpy)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/aar3/xmrpy)
