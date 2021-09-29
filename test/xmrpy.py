@@ -210,7 +210,15 @@ class TestWallet:
 
     @pytest.mark.skip(reason="Blocked by .transfer()")
     async def test_rpcmethod__sign_transfer(self):
-        pass
+        response = await self.sign_transfer(unsigned_txset=PREV_TRANSFER_RESPONSE["result"]["unsigned_txset"], export_raw=True)
+        print(response.as_dict())
+
+        assert not response.is_err()
+
+        assert isinstance(response.result.signed_txset, str)
+        assert isinstance(response.result.tx_hash_list, list)
+        assert isinstance(response.result.tx_raw_list, list)
+
 
     @pytest.mark.skip(reason="Blocked .sign_transfer()")
     async def test_rpcmethod__submit_transfer(self):

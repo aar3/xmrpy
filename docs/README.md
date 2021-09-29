@@ -5,13 +5,14 @@ Based on the JSON RPC API available at https://www.getmonero.org/resources/devel
 
 [A list of community run, publicly accessibly Monero nodes](https://monero.fail/)
 
+![GitHub Pipenv locked Python version](https://img.shields.io/github/pipenv/locked/python-version/aar3/xmrpy)
 ![GitHub Pipenv locked dependency version](https://img.shields.io/github/pipenv/locked/dependency-version/aar3/xmrpy/httpx)
 ![GitHub Pipenv locked dependency version](https://img.shields.io/github/pipenv/locked/dependency-version/aar3/xmrpy/dev/pytest)
-
 ![GitHub issues](https://img.shields.io/github/issues/aar3/xmrpy)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/aar3/xmrpy)
-
 ![Travis (.com)](https://img.shields.io/travis/com/aar3/xmrpy)
+![GitHub repo size](https://img.shields.io/github/repo-size/aar3/xmrpy)
+![GitHub](https://img.shields.io/github/license/aar3/xmrpy)
 
 <hr/>
 
@@ -22,7 +23,7 @@ Based on the JSON RPC API available at https://www.getmonero.org/resources/devel
 
 #### Monero Daemon RPC
 - https://www.monero.how/how-to-run-monero-node
-- `USER=ralston PASSWORD=password bash scripts/daemon.bash`
+- `USER=user PASSWORD=password bash scripts/daemon.bash`
 
 #### Monero Wallet RPC
 - https://www.getmonero.org/downloads/

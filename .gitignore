@@ -13,3 +13,7 @@ aliases.rc
 .coverage
 seed.txt
 *.log
+dist/
+*.egg-info*/
+.pypirc
+

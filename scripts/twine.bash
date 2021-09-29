@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Copyright 2021 Rashad Alston
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -15,28 +17,22 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import os
-from xmrpy._utils import config_file_to_config, derive_loglevel
+if [[ -z $VERSION ]]; then
+	echo "No VERSION provided. I'm doing nothing (>'-')>"
+	exit 1
+fi
 
+echo "Clearing old dist/"
+rm -rfv dist
 
-class Config:
+echo "Clearing old .egg.info/"
+rm -rfv xmrpy.egg-info
 
-    DAEMON_RPC_ADDR: str = "127.0.0.1:18081"
-    WALLET_RPC_ADDR: str = "127.0.0.1:18083"
+python -m build
 
-    DIGEST_USER_NAME: str
-    DIGEST_USER_PASSWORD: str
+if [[ -z $TESTPYPI ]]; then
+	twine upload -r testpypi dist/*
+else
+	twine upload -r testpypi dist/*
+fi
 
-    HTTP_READ_TIMEOUT: str = "10"
-
-    LOG_LEVEL = derive_loglevel("DEBUG")
-    LOG_FILE = "xmrpy.log"
-
-    def __init__(self, **kwargs):
-        self.__dict__.update(**kwargs)
-
-
-p = os.path.join(os.path.dirname(os.path.dirname(os.path.relpath(__file__))), "xmrpy.conf")
-config = Config()
-if os.path.exists(p) and os.path.isfile("xmrpy.conf"):
-    config = config_file_to_config(p)
